@@ -1,6 +1,9 @@
 README.md
 setup.py
+src/tweets_demo/__init__.py
+src/tweets_demo/app.py
 src/tweets_demo.egg-info/PKG-INFO
 src/tweets_demo.egg-info/SOURCES.txt
 src/tweets_demo.egg-info/dependency_links.txt
 src/tweets_demo.egg-info/top_level.txt
+src/tweets_demo/configuration/__init__.py
