@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title> {% block title %}Home page{% endblock %} </title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body> 
+    <div class="logo">
+        <h2>___ TEAM WORK ___</h2>
+    </div>
+    <div class="split left">
+        <div class="menu">
+            <ul>
+                <li>Home</li>
+                <li>Notifications</li>
+                <li>Tweeet</li>
+            </ul>
+            
+        </div>
+        <div class="login">
+           {# Menu -> Home / Notifications / Tweet / Show user / Log out @username (unique) #}
+            {% if session.get("logged_in") %}
+                Hello {{ session.get("logged_in") }}!
+            {% else %}
+                Hello guest!
+            {% endif %} 
+        </div>
+    </div>
+    <div class="split right">
+        <div class="top">
+            <div class="search__container">
+                <input class="search__input" type="text" placeholder="Search Tweets">
+            </div>
+        </div>
+        <div> 
+            <ul>
+                <li>
+                    Tweet Content 
+                </li>
+            </ul>
+            
+            <div>
+            <ul>
+                <li>
+                    Comment Section
+                </li>
+            </ul>
+            </div>
+        </div>
+        {# footer side -> fixed logo #}
+        {# main body -> tweets & comments #}
+        {% block content %} 
+        {% with messages = get_flashed_messages() %}
+          <div class=flashes>
+            {% if messages %}
+              <ul>
+              {% for message in messages %}<li>{{ message }}</li>{% endfor %}
+              </ul>
+            {% endif %}
+          </div>
+        {% endwith %}
+            {# =========== Index Section ======== #}
+            
+        {% endblock %}
+    </div>
+</body>
+</html>

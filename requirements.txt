@@ -1,0 +1,9 @@
+Flask==2.1.2
+ipdb
+python-configuration>=0.8
+PyYAML==5.4.1
+Flask-SQLAlchemy
+alembic
+flask_sqlalchemy
+Flask-Alembic
+flask_sessionstore
