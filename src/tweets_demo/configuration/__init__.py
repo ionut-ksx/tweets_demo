@@ -2,7 +2,7 @@ import os
 import sys
 
 from config import ConfigurationSet, config_from_yaml, config_from_env
-from tweets_demo import ROOT_PATH
+from src.tweets_demo import ROOT_PATH
 
 PREFIX = "tweets_demo"
 

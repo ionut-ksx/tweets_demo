@@ -1,16 +1,20 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Index
 from sqlalchemy.orm import relationship, validates
-from tweets_demo.app import db
+from src.tweets_demo.app import db
+from src.tweets_demo.models.user import User
+from src.tweets_demo.models.tweet import Tweet
 from datetime import datetime
 
 
 class Comment(db.Model):
     __tablename__ = "comments"
     id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
-    id_tweet = Column(Integer, ForeignKey=("tweet.id"), nullable=False)
-    id_user = Column(Integer, ForeignKey=("user.id"), nullable=False)
+    id_tweet = Column(Integer, nullable=False)
+    id_user = Column(Integer, nullable=False)
     created_at = Column(String(255), nullable=False)
     content = Column(String(256), nullable=False)
+    id_tweet = relationship("Tweet", back_populates="id")
+    id_user = relationship("User", back_populates="id")
 
     def __init__(self, id_tweet, id_user, created_at, content):
         self.id_tweet = self._is_valid_id_tweet(str(id_tweet))

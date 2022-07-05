@@ -7,6 +7,9 @@ Create Date: 2022-07-04 20:28:35.833933
 """
 from alembic import op
 import sqlalchemy as sa
+from src.tweets_demo.models.user import User
+from src.tweets_demo.models.tweet import Tweet
+from sqlalchemy import ForeignKey
 
 
 # revision identifiers, used by Alembic.
@@ -17,6 +20,7 @@ depends_on = None
 
 
 def upgrade() -> None:
+
     op.create_table(
         "users",
         sa.Column("id", sa.Integer(), primary_key=True, autoincrement=True),
@@ -25,12 +29,11 @@ def upgrade() -> None:
         sa.Column("pwhash", sa.String(255), nullable=False),
         sa.Column("role", sa.String(255), default=1),
         sa.PrimaryKeyConstraint("id"),
-    )
-
+    ),
     op.create_table(
         "tweets",
-        sa.Column("id", sa.Integer, primary_key=True, unique=True, autoincrement=True),
-        sa.Column("id_user", sa.Integer, ForeignKey=("user.id"), Index=True, nullable=False),
+        sa.Column("id", sa.Integer, primary_key=True, autoincrement=True),
+        sa.Column("id_user", sa.Integer, ForeignKey("users.id"), nullable=False),
         sa.Column("created_at", sa.String(255), nullable=False),
         sa.Column("content", sa.String(256), nullable=False),
         sa.PrimaryKeyConstraint("id"),
@@ -38,9 +41,9 @@ def upgrade() -> None:
 
     op.create_table(
         "comments",
-        sa.Column("id", sa.Integer, primary_key=True, unique=True, autoincrement=True),
-        sa.Column("id_tweet", sa.Integer, ForeignKey=("tweet.id"), nullable=False),
-        sa.Column("id_user", sa.Integer, ForeignKey=("user.id"), nullable=False),
+        sa.Column("id", sa.Integer, primary_key=True, autoincrement=True),
+        sa.Column("id_tweet", sa.Integer, ForeignKey("tweets.id"), nullable=False),
+        sa.Column("id_user", sa.Integer, ForeignKey("users.id"), nullable=False),
         sa.Column("created_at", sa.String(255), nullable=False),
         sa.Column("content", sa.String(256), nullable=False),
         sa.PrimaryKeyConstraint("id"),

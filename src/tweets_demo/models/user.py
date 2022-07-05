@@ -3,7 +3,7 @@
 """
 from sqlalchemy import Column, Integer, String, ForeignKey, Index
 from sqlalchemy.orm import relationship, validates
-from tweets_demo.app import db
+from src.tweets_demo.app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
 
@@ -15,7 +15,7 @@ class Role:
 
 class User(db.Model):
     __tablename__ = "users"
-    id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String(255), unique=True, nullable=False)
     name = Column(String(255), nullable=False)
     pwhash = Column(String(255), nullable=False)

@@ -1,18 +1,19 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Index
 from sqlalchemy.orm import relationship, validates
-from tweets_demo.app import db
-from tweets_demo.models.user import User
+from src.tweets_demo.app import db
+from src.tweets_demo.models.user import User
 import re
 
 
 class Tweet(db.Model):
     __tablename__ = "tweets"
     id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
-    id_user = Column(Integer, ForeignKey=("user.id"), Index=True, nullable=False)
+    id_user = Column(Integer, nullable=False)
     created_at = Column(String(255), nullable=False)
     content = Column(String(256), nullable=False)
+    id_user = relationship("User", back_populates="id")
 
-    def __init__(self, id_user, created_at, content):
+    def __init__(self, id_user="", created_at="", content=""):
         self.id_user = self._is_valid_id_user(str(id_user))
         self.created_at = self._is_valid_date_time(created_at)
         self.content = self._is_valid_content(content)
@@ -27,7 +28,7 @@ class Tweet(db.Model):
         return id_user
 
     def _is_valid_date_time(self, created_at):
-        if not datetime.datetime.strptime(created_at, '%d-%m-%Y')
+        if not datetime.datetime.strptime(created_at, "%d-%m-%Y"):
             raise ValueError("Not a valid datetime")
         return created_at
 
