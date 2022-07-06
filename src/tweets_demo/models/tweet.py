@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Index
 from sqlalchemy.orm import relationship, validates
-from src.tweets_demo.app import db
-from src.tweets_demo.models.user import User
+from tweets_demo.app import db
+from tweets_demo.models.user import User
 import re
 
 

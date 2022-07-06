@@ -3,7 +3,7 @@
 """
 from sqlalchemy import Column, Integer, String, ForeignKey, Index
 from sqlalchemy.orm import relationship, validates
-from src.tweets_demo.app import db
+from tweets_demo.app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
 
