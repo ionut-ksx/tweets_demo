@@ -34,13 +34,15 @@
                 <input class="search__input" type="text" placeholder="Search Tweets">
             </div>
         </div>
-        <div> 
+        <div class="tweets"> 
+            
+            {% for tweet in tweets%}
             <ul>
                 <li>
-                    Tweet Content 
+                    {{tweets.id_user}} : <a href="{{ url_for('tweets.show', id= tweet.id) }}">{{tweet.content}}</a>
                 </li>
             </ul>
-            
+            {% endfor %}
             <div>
             <ul>
                 <li>

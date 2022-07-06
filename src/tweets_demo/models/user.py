@@ -6,6 +6,9 @@ from sqlalchemy.orm import relationship, validates
 from tweets_demo.app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
 
 
 class Role:
@@ -13,13 +16,15 @@ class Role:
     USER = 1
 
 
-class User(db.Model):
+class User(db.Model, Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String(255), unique=True, nullable=False)
     name = Column(String(255), nullable=False)
     pwhash = Column(String(255), nullable=False)
     role = Column(String(255), default=1)
+    tweet = relationship("Tweet", primaryjoin="User.id==Tweet.id_user")
+    comment = relationship("Comment", primaryjoin="User.id==Comment.id_user")
 
     def __init__(self, username="", name="", pwhash="", role=Role.USER):
         self.username = self._username(username)

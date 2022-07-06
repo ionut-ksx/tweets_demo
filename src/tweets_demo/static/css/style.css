@@ -94,3 +94,6 @@ input:focus, input:hover{
 }
 
 /* End Search Section */
+div.tweets {
+    color: white;
+}
