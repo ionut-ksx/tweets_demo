@@ -1,0 +1,16 @@
+{% extends 'index.html' %}
+{% block title %}View tweet{% endblock %} 
+{% block content%}
+<hr>
+<p>{{tweet_author.name}} ({{tweet_author.username}})</p>
+<p>{{ tweet.content }}</p>
+<hr>
+{% for comment in comments %}
+    <p>{{comment.id_user}} wrote {{comment.content}}</p>
+    <hr>
+{% endfor %}
+{% if mess %}
+    {{ mess }}
+{% endif %}
+
+{% endblock %}

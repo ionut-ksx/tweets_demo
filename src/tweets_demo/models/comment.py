@@ -4,17 +4,21 @@ from tweets_demo.app import db
 from tweets_demo.models.user import User
 from tweets_demo.models.tweet import Tweet
 from datetime import datetime
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
 
 
-class Comment(db.Model):
+class Comment(db.Model, Base):
     __tablename__ = "comments"
     id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
-    id_tweet = Column(Integer, nullable=False)
-    id_user = Column(Integer, nullable=False)
+    id_tweet = Column(Integer, ForeignKey("tweets.id"), nullable=False)
+    id_user = Column(Integer, ForeignKey("users.id"), nullable=False)
     created_at = Column(String(255), nullable=False)
     content = Column(String(256), nullable=False)
-    id_tweet = relationship("Tweet", back_populates="id")
-    id_user = relationship("User", back_populates="id")
+
+    # tweet = relationship("Tweet", foreign_keys=["id_tweet"])
+    # user = relationship("User", foreign_keys=["id_user"])
 
     def __init__(self, id_tweet, id_user, created_at, content):
         self.id_tweet = self._is_valid_id_tweet(str(id_tweet))
@@ -38,7 +42,7 @@ class Comment(db.Model):
         return id_user
 
     def _is_valid_date_time(self, created_at):
-        if not datetime.datetime.strptime(created_at, '%d-%m-%Y')
+        if not datetime.datetime.strptime(created_at, "%d-%m-%Y"):
             raise ValueError("Not a valid datetime")
         return created_at
 

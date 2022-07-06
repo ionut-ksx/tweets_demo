@@ -3,15 +3,18 @@ from sqlalchemy.orm import relationship, validates
 from tweets_demo.app import db
 from tweets_demo.models.user import User
 import re
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
 
 
-class Tweet(db.Model):
+class Tweet(db.Model, Base):
     __tablename__ = "tweets"
     id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
-    id_user = Column(Integer, nullable=False)
+    id_user = Column(Integer, ForeignKey("users.id"), nullable=False)
     created_at = Column(String(255), nullable=False)
     content = Column(String(256), nullable=False)
-    id_user = relationship("User", back_populates="id")
+    comment = relationship("Comment", primaryjoin="Tweet.id==Comment.id_tweet")
 
     def __init__(self, id_user="", created_at="", content=""):
         self.id_user = self._is_valid_id_user(str(id_user))

@@ -7,8 +7,9 @@ Create Date: 2022-07-04 20:28:35.833933
 """
 from alembic import op
 import sqlalchemy as sa
-from src.tweets_demo.models.user import User
-from src.tweets_demo.models.tweet import Tweet
+
+# from tweets_demo.models.user import User
+# from tweets_demo.models.tweet import Tweet
 from sqlalchemy import ForeignKey
 
 
