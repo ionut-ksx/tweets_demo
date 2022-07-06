@@ -2,7 +2,7 @@
 *.iml
 *.pyc
 *.bak
-__pycache__
+**/__pycache__
 .cache
 *.egg-info
 dist/*
