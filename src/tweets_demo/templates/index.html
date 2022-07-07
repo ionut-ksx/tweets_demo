@@ -22,7 +22,7 @@
         <div class="login">
            {# Menu -> Home / Notifications / Tweet / Show user / Log out @username (unique) #}
             {% if session.get("logged_in") %}
-                Hello {{ session.get("logged_in") }}!
+                Hello {{ session.get("logged_in") }}! (<a href="{{ url_for('users.logout') }}">Logout</a>)
             {% else %}
                 Hello guest!
             {% endif %} 

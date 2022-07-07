@@ -1,8 +1,7 @@
 from flask import Flask, Blueprint, session, jsonify, render_template, url_for, request, redirect, flash
 import ipdb
-from tweets_demo.models.tweet import Tweet
-from tweets_demo.models.user import User
-from tweets_demo.models.comment import Comment
+
+
 from datetime import datetime
 
 tweets_blueprint = Blueprint("tweets", __name__)
@@ -12,6 +11,10 @@ from tweets_demo.app import db
 
 @tweets_blueprint.route("/tweet/<id>")
 def show(id):
+    from tweets_demo.models.tweet import Tweet
+    from tweets_demo.models.user import User
+    from tweets_demo.models.comment import Comment
+
     query = Tweet.query.filter_by(id=id).all()
     tweet = query[0]
 

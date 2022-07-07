@@ -1,14 +1,17 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Index
 from sqlalchemy.orm import relationship, validates
 from tweets_demo.app import db
-from tweets_demo.models.user import User
 import re
 from sqlalchemy.ext.declarative import declarative_base
+
+# from tweets_demo.models.comment import Comment
 
 Base = declarative_base()
 
 
 class Tweet(db.Model, Base):
+    from tweets_demo.models.comment import Comment
+
     __tablename__ = "tweets"
     id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
     id_user = Column(Integer, ForeignKey("users.id"), nullable=False)

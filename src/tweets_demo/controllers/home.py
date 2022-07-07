@@ -1,6 +1,9 @@
-from flask import Flask, Blueprint, jsonify, render_template, url_for, request, redirect, flash
+from flask import Flask, Blueprint, jsonify, render_template, url_for, request, redirect, flash, session
 from werkzeug.utils import secure_filename
+from flask_sessionstore import Session
+
 from tweets_demo.models.tweet import Tweet
+from tweets_demo import login_required
 
 import os
 import ipdb
@@ -11,6 +14,15 @@ from tweets_demo.app import db
 
 
 @home_blueprint.route("/")
+@login_required
 def index():
     tweets = Tweet.query.order_by(Tweet.id).all()
     return render_template("index.html", tweets=tweets)
+
+
+@home_blueprint.route("/logout/")
+@login_required
+def logout():
+    session.pop("logged_in", None)
+    flash("Logged out successfully")
+    return redirect(url_for("home.index"))
