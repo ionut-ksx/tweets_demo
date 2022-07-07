@@ -1,0 +1,37 @@
+{% extends "index.html" %}
+<h2>{% block title %}Login Form{% endblock %}</h2>
+
+
+{% block content %}
+{% with messages = get_flashed_messages() %}
+<div class=flashes>
+    {% if messages %}
+      <ul >
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+  {% endif %}
+</div>
+{% endwith %}
+<div class="center">
+  {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+  <form action="{{ url_for('users.login') }}" method="POST">
+    <label for="username">Username</label>
+      <br>
+      <input type="text" name="username"
+             placeholder="Your username"
+             value="{{ request.form['username'] }}">
+               
+      </input>
+      <br>
+    <label for="password">Password</label>
+      <br>
+      <input type="password" name="password" placeholder="Your password"></input>
+        <br>
+        <br>
+      <input type="submit" value="Login">
+  </form>
+  <a href="#"><i>Recover password</i></a>
+</div>
+{% endblock %}
