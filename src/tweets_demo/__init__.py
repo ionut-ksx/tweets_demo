@@ -1,5 +1,4 @@
 import os
-from flask_login import LoginManager
 from functools import wraps
 from flask_sessionstore import Session
 from flask import session, url_for, redirect, flash

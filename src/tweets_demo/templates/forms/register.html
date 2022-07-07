@@ -16,41 +16,43 @@
 <div class="center">
   <h2>Registration Form</h2>
   {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
-  <form action="{{ url_for('users.register') }}" method="POST">
-    <dl>
-      <label for="username">Username</label>
-      <br>
-      <input type="text" name="username"
-             placeholder="User must be unique!"
-             value="{{ request.form['username'] }}">
-               
-      </input>
-      <br>
-      <label for="name">name</label>
-      <br>
-      <input type="text" name="name"
-             placeholder="Your name .."
-             value="{{ request.form['name'] }}">
-               
-      </input>
-      <br>
-      <label for="password">Password</label>
-      <br>
-      <input type="password" name="password"
-             placeholder="Choose a strong password.">
-               
-      </input>
-      <br>
-      <label for="password">Confirm Password</label>
-      <br>
-      <input type="password" name="re_password"
-             placeholder="Confirm the password">
-               
-      </input>
-      <br>
-      <br>
-      <input type="submit" value="Register"></input>
+  <div class="register">
+    <form action="{{ url_for('users.register') }}" method="POST">
+      <dl>
+        <label for="username">Username</label>
+        <br>
+        <input type="text" name="username"
+               placeholder="User must be unique!"
+               value="{{ request.form['username'] }}">
+                 
+        </input>
+        <br>
+        <label for="name">name</label>
+        <br>
+        <input type="text" name="name"
+               placeholder="Your name .."
+               value="{{ request.form['name'] }}">
+                 
+        </input>
+        <br>
+        <label for="password">Password</label>
+        <br>
+        <input type="password" name="password"
+               placeholder="Choose a strong password.">
+                 
+        </input>
+        <br>
+        <label for="password">Confirm Password</label>
+        <br>
+        <input type="password" name="re_password"
+               placeholder="Confirm the password">
+                 
+        </input>
+        <br>
+        <br>
+        <input type="submit" value="Register"></input>
 
-  </form>
+    </form>
+  </div>
 </div>
 {% endblock %}

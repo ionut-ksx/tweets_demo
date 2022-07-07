@@ -49,15 +49,16 @@ div.logo{
 div.top{
     width: 220px;
     margin: 2px;
+    margin-top: 16px;
     font-family: 'Raleway', sans-serif;
 }
 div.container {
     padding-top: 64px;
 }
 
-input {
+.top input {
     width: 100%;
-    padding: 12px 24px;
+    padding: 10px 20px;
 
     background-color: transparent;
     transition: transform 250ms ease-in-out;
@@ -84,7 +85,7 @@ input {
     letter-spacing: 1.5px;
 }
 
-input:focus, input:hover{
+.top input:focus, .top input:hover{
     padding: 12px 0;
     outline: 0;
     border: 1px solid transparent;
@@ -96,4 +97,26 @@ input:focus, input:hover{
 /* End Search Section */
 div.tweets {
     color: white;
+}
+
+div.register {
+}
+
+a:link {
+  color: lightblue;
+}
+
+/* visited link */
+a:visited {
+  color: green;
+}
+
+/* mouse over link */
+a:hover {
+  color: none;
+}
+
+/* selected link */
+a:active {
+  color: lightseagreen;
 }

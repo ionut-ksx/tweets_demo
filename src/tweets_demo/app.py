@@ -5,7 +5,6 @@ import time
 import sys
 from tweets_demo.configuration import config
 import os
-from flask_login import LoginManager
 
 
 UPLOAD_FOLDER = "/tmp"
@@ -13,7 +12,6 @@ UPLOAD_FOLDER = "/tmp"
 app = Flask(__name__)
 app.secret_key = "SQLAlchemySecret"
 app.config.update(config().as_dict())
-login_manager = LoginManager()
 
 db = SQLAlchemy(app)
 
