@@ -2,15 +2,18 @@
 {% block title %}View tweet{% endblock %} 
 {% block content%}
 <hr>
-<p>{{tweet_author.name}} ({{tweet_author.username}})</p>
+<p>{{tweet.name}} ({{tweet.username}})</p>
 <p>{{ tweet.content }}</p>
 <hr>
-{% for comment in comments %}
-    <p>{{comment.id_user}} wrote {{comment.content}}</p>
+{% for comment in all_comments %}
+    <p>{{comment.name}} ({{comment.username}}) wrote {{comment.content}}</p>
     <hr>
 {% endfor %}
 {% if mess %}
     {{ mess }}
 {% endif %}
+<div><a href="{{ url_for('comments.new', id= tweet.id) }}">Add a comment</a></div>
+<div><a href="{{url_for('tweets.delete', id = tweet.id)}}">Delete tweet</a></div>
+
 
 {% endblock %}

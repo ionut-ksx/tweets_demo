@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship, validates
 from tweets_demo.app import db
 from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
+import re
 
 Base = declarative_base()
 
