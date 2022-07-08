@@ -14,6 +14,17 @@
 {% endif %}
 <div><a href="{{ url_for('comments.new', id= tweet.id) }}">Add a comment</a></div>
 <div><a href="{{url_for('tweets.delete', id = tweet.id)}}">Delete tweet</a></div>
+{% with messages = get_flashed_messages() %}
+    <div class=flashes>
+    {% if messages %}
+        <ul>
+        {% for message in messages %}<li>
+            <span style=“color:orange”>{{ message }}</span> </li>{% endfor %}
+        </ul>
+        {% endif %}
+        </div>
 
+    {% endwith %}
+    </div>
 
 {% endblock %}

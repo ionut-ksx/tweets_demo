@@ -21,10 +21,18 @@ def new(id):
 def create(id):
     from tweets_demo.models.comment import Comment
 
-    current_date_time = datetime.now()
-    # current_date_time = x.strftime("%d") + "-" + x.strftime(%m) + "-" + x.strftime(%y) + " " + x.strftime(%H) + ":" + x.strftime(%M)
-    # current_date_time = x.strftime("%d") + "-" + x.strftime("%m") + "-" + x.strftime("%y")
-    # print(current_date_time)
+    x = datetime.now()
+    current_date_time = (
+        x.strftime("%d")
+        + "-"
+        + x.strftime("%m")
+        + "-"
+        + x.strftime("%Y")
+        + " "
+        + x.strftime("%H")
+        + ":"
+        + x.strftime("%M")
+    )
     try:
         comment = Comment(
             id_user=2,
@@ -32,8 +40,9 @@ def create(id):
             created_at=str(current_date_time),
             content=request.form.get("content"),
         )
+        flash("Comment added")
         db.session.add(comment)
         db.session.commit()
     except AssertionError as errors:
         return render_template("/comment/new.html", errors=errors)
-    return render_template(url_for("tweets.show", id=id))
+    return redirect("/")

@@ -27,7 +27,11 @@ def login():
         # ipdb.set_trace()
         if user.check_password(password):
             flash("You are logged in", "success")
-            session["logged_in"] = user.username
+            session["logged_in"] = {"username": user.username, "user_id": user.id}
+            # ipdb.set_trace()
+
+            # session['logged_in'].get('username')
+            # session['logged_in'].get('user_id')
             return redirect(url_for("home.index"))
 
 

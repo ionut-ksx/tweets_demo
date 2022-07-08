@@ -63,7 +63,7 @@ def create():
     )
     try:
         tweet = Tweet(
-            id_user=2,
+            id_user=session["logged_in"]["user_id"],
             created_at=str(current_date_time),
             content=request.form.get("content"),
         )

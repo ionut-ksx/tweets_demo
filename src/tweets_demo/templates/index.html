@@ -13,13 +13,10 @@
     <div class="split left">
         <div class="menu">
             <ul>
-<<<<<<< HEAD
                 <li>
                     <a href="{{ url_for('home.index') }}">Home</a>
                 </li>
-=======
-                <li><a href="/">Home</a></li>
->>>>>>> 85822ce (fix and add new comment)
+
                 <li>Notifications</li>
                 <li><a href="/tweet/new">New Tweeet</a></li>
             </ul>
@@ -28,7 +25,7 @@
         <div class="login">
            {# Menu -> Home / Notifications / Tweet / Show user / Log out @username (unique) #}
             {% if session.get("logged_in") %}
-                Hello {{ session.get("logged_in") }}! (<a href="{{ url_for('users.logout') }}">Logout</a>)
+                Hello {{ session["logged_in"]["username"] }}! (<a href="{{ url_for('users.logout') }}">Logout</a>)
             {% else %}
                 Hello guest!
                 <br>
@@ -38,15 +35,14 @@
         </div>
     </div>
     <div class="split right">
-<<<<<<< HEAD
+
         
-=======
-        <div class="top">
+{% block content%}        <div class="top">
             <div class="search__container">
                 <input class="search__input" type="text" placeholder="Search Tweets">
             </div>
         </div>
-        <div><a href="/tweet/new">Add new tweet</a></div>
+       
 
         <div class="tweets"> 
             
@@ -58,33 +54,7 @@
             </ul>
             {% endfor %}
         </div>
->>>>>>> 85822ce (fix and add new comment)
-        {# footer side -> fixed logo #}
-        {# main body -> tweets & comments #}
-        {% block content %} 
-        {% with messages = get_flashed_messages() %}
-          <div class=flashes>
-            {% if messages %}
-              <ul>
-              {% for message in messages %}<li>{{ message }}</li>{% endfor %}
-              </ul>
-            {% endif %}
-          </div>
-          <div class="top">
-            <div class="search__container">
-                <input class="search__input" type="text" placeholder="Search Tweets">
-            </div>
-          </div>
-          <div class="tweets"> 
-            {% for tweet in tweets%}
-            <ul>
-                <li>
-                    {{tweets.id_user}} : <a href="{{ url_for('tweets.show', id= tweet.id) }}">{{tweet.content}}</a>
-                </li>
-            </ul>
-            {% endfor %}
-        </div>
-        {% endwith %}
+
             {# =========== Index Section ======== #}
             
         {% endblock %}
