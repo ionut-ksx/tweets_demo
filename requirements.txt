@@ -7,3 +7,4 @@ alembic
 flask_sqlalchemy
 Flask-Alembic
 flask_sessionstore
+flask_login

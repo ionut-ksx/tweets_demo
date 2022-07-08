@@ -3,6 +3,8 @@ from werkzeug.utils import secure_filename
 from flask_sessionstore import Session
 
 from tweets_demo.models.tweet import Tweet
+from tweets_demo.models.user import User
+
 from tweets_demo import login_required
 
 import os
@@ -16,7 +18,12 @@ from tweets_demo.app import db
 @home_blueprint.route("/")
 @login_required
 def index():
-    tweets = Tweet.query.order_by(Tweet.id).all()
+    # tweets = Tweet.query.order_by(Tweet.id).all()
+    tweets = (
+        Tweet.query.join(User, User.id == Tweet.id_user)
+        .add_columns(User.name, User.username, Tweet.content, Tweet.id)
+        .all()
+    )
     return render_template("index.html", tweets=tweets)
 
 

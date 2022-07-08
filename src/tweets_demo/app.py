@@ -18,11 +18,13 @@ db = SQLAlchemy(app)
 from tweets_demo.controllers.tweets import tweets_blueprint
 from tweets_demo.controllers.home import home_blueprint
 from tweets_demo.controllers.users import users_blueprint
+from tweets_demo.controllers.comments import comments_blueprint
 
 
 app.register_blueprint(tweets_blueprint)
 app.register_blueprint(home_blueprint)
 app.register_blueprint(users_blueprint)
+app.register_blueprint(comments_blueprint)
 
 if __name__ == "__main__":
 

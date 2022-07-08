@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship, validates
 from tweets_demo.app import db
 from datetime import datetime
 from sqlalchemy.ext.declarative import declarative_base
+import re
 
 Base = declarative_base()
 
@@ -40,7 +41,7 @@ class Comment(db.Model, Base):
         return id_user
 
     def _is_valid_date_time(self, created_at):
-        if not datetime.datetime.strptime(created_at, "%d-%m-%Y"):
+        if not datetime.strptime(created_at, "%d-%m-%Y %H:%M"):
             raise ValueError("Not a valid datetime")
         return created_at
 

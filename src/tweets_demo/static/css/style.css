@@ -95,6 +95,9 @@ div.container {
 }
 
 /* End Search Section */
+div.flash {
+  color: orange;
+}
 div.tweets {
     color: white;
 }
