@@ -16,6 +16,7 @@
 {% endwith %}
 <div class="center">
   {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+    <h2>Welcome!</h2>
   <form action="{{ url_for('users.login') }}" method="POST">
     <label for="username">Username</label>
       <br>

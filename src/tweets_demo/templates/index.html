@@ -13,7 +13,9 @@
     <div class="split left">
         <div class="menu">
             <ul>
-                <li>Home</li>
+                <li>
+                    <a href="{{ url_for('home.index') }}">Home</a>
+                </li>
                 <li>Notifications</li>
                 <li>Tweeet</li>
             </ul>
@@ -25,32 +27,14 @@
                 Hello {{ session.get("logged_in") }}! (<a href="{{ url_for('users.logout') }}">Logout</a>)
             {% else %}
                 Hello guest!
+                <br>
+                (<a href="{{ url_for('users.register_form') }}">Register</a>)
+
             {% endif %} 
         </div>
     </div>
     <div class="split right">
-        <div class="top">
-            <div class="search__container">
-                <input class="search__input" type="text" placeholder="Search Tweets">
-            </div>
-        </div>
-        <div class="tweets"> 
-            
-            {% for tweet in tweets%}
-            <ul>
-                <li>
-                    {{tweets.id_user}} : <a href="{{ url_for('tweets.show', id= tweet.id) }}">{{tweet.content}}</a>
-                </li>
-            </ul>
-            {% endfor %}
-            <div>
-            <ul>
-                <li>
-                    Comment Section
-                </li>
-            </ul>
-            </div>
-        </div>
+        
         {# footer side -> fixed logo #}
         {# main body -> tweets & comments #}
         {% block content %} 
@@ -62,6 +46,20 @@
               </ul>
             {% endif %}
           </div>
+          <div class="top">
+            <div class="search__container">
+                <input class="search__input" type="text" placeholder="Search Tweets">
+            </div>
+          </div>
+          <div class="tweets"> 
+            {% for tweet in tweets%}
+            <ul>
+                <li>
+                    {{tweets.id_user}} : <a href="{{ url_for('tweets.show', id= tweet.id) }}">{{tweet.content}}</a>
+                </li>
+            </ul>
+            {% endfor %}
+        </div>
         {% endwith %}
             {# =========== Index Section ======== #}
             
