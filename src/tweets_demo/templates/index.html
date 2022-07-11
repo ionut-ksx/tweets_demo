@@ -37,12 +37,24 @@
     <div class="split right">
 
         
-{% block content%}        <div class="top">
+{% block content%} 
+
+      <div class="top">
             <div class="search__container">
                 <input class="search__input" type="text" placeholder="Search Tweets">
             </div>
         </div>
-       
+    {% with messages = get_flashed_messages() %}
+        <div class=flashes>
+        {% if messages %}
+            <ul>
+            {% for message in messages %}<li>
+                {{ message.upper() }}</li>{% endfor %}
+            </ul>
+            {% endif %}
+            </div>
+
+    {% endwith %}
 
         <div class="tweets"> 
             

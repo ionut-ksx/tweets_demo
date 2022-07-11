@@ -1,0 +1,24 @@
+{% extends 'index.html' %}
+{% block title %}View comment{% endblock %} 
+{% block content%}
+<hr>
+<p>{{comment.name}} ({{comment.username}})</p>
+<p>{{ comment.content }}</p>
+{% if author == "True"%}
+    <div><a href="{{url_for('comments.delete_C', id = comment.id)}}">Delete comment</a></div>
+{% endif %}
+{% with messages = get_flashed_messages() %}
+    <div class=flashes>
+    {% if messages %}
+        <ul>
+        {% for message in messages %}<li>
+            <span style=“color:orange”>{{ message }}</span> </li>{% endfor %}
+        </ul>
+        {% endif %}
+        </div>
+
+    {% endwith %}
+    </div>
+
+
+{% endblock %}
