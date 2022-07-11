@@ -22,16 +22,10 @@ def login():
     except AssertionError as error:
         return render_template("login.html", error=error)
     else:
-        # user = User.query.get(username)
         user = User.query.filter_by(username=username).first()
-        # ipdb.set_trace()
         if user.check_password(password):
             flash("You are logged in", "success")
             session["logged_in"] = {"username": user.username, "user_id": user.id}
-            # ipdb.set_trace()
-
-            # session['logged_in'].get('username')
-            # session['logged_in'].get('user_id')
             return redirect(url_for("home.index"))
 
 
