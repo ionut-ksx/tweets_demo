@@ -1,0 +1,15 @@
+{% extends 'index.html' %}
+
+{# set active_page = 'home' #}
+
+{% block title %}Content{% endblock %}
+
+{% block content %}
+
+<div class="search_content">
+	{% if results %}{{results}}
+		
+	{% endif %}
+</div>
+
+{% endblock %}
