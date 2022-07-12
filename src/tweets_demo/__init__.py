@@ -1,6 +1,5 @@
 import os
 from functools import wraps
-from flask_sessionstore import Session
 from flask import session, url_for, redirect, flash
 
 ROOT_PATH = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
