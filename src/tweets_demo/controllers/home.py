@@ -1,6 +1,5 @@
 from flask import Flask, Blueprint, jsonify, render_template, url_for, request, redirect, flash, session
 from werkzeug.utils import secure_filename
-from flask_sessionstore import Session
 
 from tweets_demo.models.tweet import Tweet
 from tweets_demo.models.user import User

@@ -1,0 +1,36 @@
+version: "3.1"
+
+services:
+  db:
+    container_name: twitter_db
+    image: postgres
+    env_file: .env
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_PASSWORD: '$DB_PASSWORD'
+      POSTGRES_USER: twitter_dev
+    # volumes:
+    #   - db-data-flask:/var/lib/postgresql/data
+
+  twitter:
+    build: .
+    # image: twitter:0.0.1
+    tty: true
+    ports:
+      - 5001:5001
+    # environment:
+
+      # flashy__SQLALCHEMY_DATABASE_URI: postgresql://twitter_dev:1234400@twitter_db:5432/twitter_dev
+    depends_on:
+      - db
+    volumes:
+      - ./:/app/
+
+
+  # volumes:
+  # db-data-flask:
+
+
