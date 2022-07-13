@@ -2,16 +2,11 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Index
 from sqlalchemy.orm import relationship, validates
 from tweets_demo.app import db
 import re
-from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
 import ipdb
 
-# from tweets_demo.models.comment import Comment
 
-Base = declarative_base()
-
-
-class Tweet(db.Model, Base):
+class Tweet(db.Model):
     from tweets_demo.models.comment import Comment
 
     __tablename__ = "tweets"

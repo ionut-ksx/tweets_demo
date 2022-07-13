@@ -7,6 +7,7 @@ from tweets_demo.app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
 from sqlalchemy.ext.declarative import declarative_base
+import ipdb
 
 Base = declarative_base()
 
@@ -26,11 +27,37 @@ class User(db.Model, Base):
     tweet = relationship("Tweet", primaryjoin="User.id==Tweet.id_user")
     comment = relationship("Comment", primaryjoin="User.id==Comment.id_user")
 
-    def __init__(self, username="", name="", pwhash="", role=Role.USER):
-        self.username = self._username(username)
-        self.name = self._name(name)
-        self.pwhash = generate_password_hash(pwhash)
+    def __init__(self, username, name, password, role=Role.USER):
+        self.username = username
+        self.errors = []
+        self.name = name
+        self.password(password)
         self.role = role
+
+    @validates(
+        "username",
+        "name",
+        "pwhash",
+        "role",
+    )
+    def validates_fields(self, key, value):
+        if not getattr(self, "errors", None):
+            self.errors = []
+
+        if not value:
+            self.errors.append(f"{key} is missing")
+
+        if key == "username":
+            if not len(value) >= 5:
+                self.errors.append(f"{key} should have at least 5 characters")
+
+        if key == "name":
+            name = value.strip()
+            regex = "^[a-zA-Z]+[' '-]?[a-zA-Z]*([' '-]?[a-zA-Z])*$"
+            if not re.match(regex, name):
+                self.errors.append(f"ie. '{key}' format: Asterix-Obelix Idefix ")
+
+        return value
 
     def __repr__(self):
         return f"id:{self.id}, username:{self.username}, name:{self.name}, role:{self.role}"
@@ -41,6 +68,7 @@ class User(db.Model, Base):
 
     @password.setter
     def password(self, password):
+        self.validate_password(password)
         self.pwhash = generate_password_hash(password)
 
     def check_password(self, password):
@@ -50,14 +78,23 @@ class User(db.Model, Base):
     def is_admin(self):
         return self.role == Role.ADMIN
 
-    def _username(self, username):
-        if not len(username) >= 5:
-            raise ValueError("username should have at least 5 characters")
-        return username
+    def is_valid(self):
+        return len(self.errors) == 0
 
-    def _name(self, name):
-        name = name.strip()
-        regex = "^[a-zA-Z]+$"
-        if not re.match(regex, name):
-            raise ValueError("Only letters are accepted")
-        return name
+    def validate_password(self, password):
+        special_sym = ["$", "@", "#", "%"]
+
+        if len(password) < 6:
+            self.errors.append("length should be at least 6")
+
+        if not any(char.isdigit() for char in password):
+            self.errors.append("Password should have at least one numeral")
+
+        if not any(char.isupper() for char in password):
+            self.errors.append("Password should have at least one uppercase letter")
+
+        if not any(char.islower() for char in password):
+            self.errors.append("Password should have at least one lowercase letter")
+
+        if not any(char in special_sym for char in password):
+            self.errors.append("Password should have at least one of the symbols $@#")

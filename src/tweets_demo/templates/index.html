@@ -25,7 +25,7 @@
         <div class="login">
            {# Menu -> Home / Notifications / Tweet / Show user / Log out @username (unique) #}
             {% if session.get("logged_in") %}
-                Hello {{ session["logged_in"]["username"] }}! (<a href="{{ url_for('users.logout') }}">Logout</a>)
+                Hello {{ session['logged_in'].get('username') }}! (<a href="{{ url_for('users.logout') }}">Logout</a>)
             {% else %}
                 Hello guest!
                 <br>
@@ -40,15 +40,6 @@
         
 {% block content%} 
 
-
-<!--       <div class="top">
-            <div class="search__container">
-                <form method="GET" enctype="multipart/form-data" action="{{url_for('home.search_results')}}">
-                    <input class="search__input" type="search" placeholder="Search Tweets" name = "q">
-                    <input type="submit" value="submit">
-                </form> 
-            </div>
-        </div> -->
     <div class="navbar-nav child">
             <form method="GET" enctype="multipart/form-data" action="{{url_for('home.search_results')}}">
                 <label for="search">Search :</label>
