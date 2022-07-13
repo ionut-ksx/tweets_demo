@@ -27,11 +27,11 @@ class User(db.Model, Base):
     tweet = relationship("Tweet", primaryjoin="User.id==Tweet.id_user")
     comment = relationship("Comment", primaryjoin="User.id==Comment.id_user")
 
-    def __init__(self, username, name, password, password_confirmation, role=Role.USER):
+    def __init__(self, username, name, passwd, password_confirmation, role=Role.USER):
         self.username = username
         self.errors = []
         self.name = name
-        self.password(password, password_confirmation)
+        self.password(passwd, password_confirmation)
         self.role = role
 
     @validates(
@@ -50,6 +50,9 @@ class User(db.Model, Base):
         if key == "username":
             if not len(value) >= 5:
                 self.errors.append(f"{key} should have at least 5 characters")
+            existing_user = User.query.filter_by(username=value).first()
+            if existing_user:
+                self.errors.append("The username is already taken")
 
         if key == "name":
             name = value.strip()
@@ -64,9 +67,8 @@ class User(db.Model, Base):
 
     @property
     def password(self):
-        raise AttributeError("Password error")
+        pass
 
-    @password.setter
     def password(self, password, password_confirmation):
         self.validate_password_confirmation(password, password_confirmation)
         self.validate_password(password)

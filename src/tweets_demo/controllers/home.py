@@ -4,6 +4,7 @@ from werkzeug.utils import secure_filename
 from tweets_demo.models.tweet import Tweet
 from tweets_demo.models.user import User
 from tweets_demo.services.search import SearchItem
+from tweets_demo.controllers.application import current_user
 
 from tweets_demo import login_required
 
@@ -15,8 +16,8 @@ home_blueprint = Blueprint("home", __name__)
 from tweets_demo.app import db
 
 
-@home_blueprint.route("/")
 @login_required
+@home_blueprint.route("/")
 def index():
     # tweets = Tweet.query.order_by(Tweet.id).all()
     tweets = (
@@ -24,7 +25,11 @@ def index():
         .add_columns(User.name, User.username, Tweet.content, Tweet.id)
         .all()
     )
-    return render_template("index.html", tweets=tweets)
+    if current_user():
+        username = current_user().username
+    else:
+        username = "guest"
+    return render_template("index.html", tweets=tweets, username=username)
 
 
 @home_blueprint.route("/logout/")

@@ -5,6 +5,7 @@ import ipdb
 
 from tweets_demo.models.user import User, Role
 from tweets_demo.app import db
+from tweets_demo.controllers.application import current_user
 
 
 users_blueprint = Blueprint("users", __name__)
@@ -17,18 +18,16 @@ def login_form():
 
 @users_blueprint.route("/login", methods=["POST"])
 def login():
-    try:
-        username = request.form.get("username")
-        password = request.form.get("password")
-
-    except AssertionError as error:
-        return render_template("login.html", error=error)
+    username = request.form.get("username")
+    password = request.form.get("password")
+    user = User.query.filter_by(username=username).first()
+    if user.check_password(password):
+        flash("You are logged in", "success")
+        set_login_session(user)
+        return redirect(url_for("home.index"))
     else:
-        user = User.query.filter_by(username=username).first()
-        if user.check_password(password):
-            flash("You are logged in", "success")
-            session["logged_in"] = {"username": user.username, "user_id": user.id}
-            return redirect(url_for("home.index"))
+        flash("Username/password is wrong")
+        return redirect(url_for("users.login"))
 
 
 @users_blueprint.route("/register")
@@ -42,17 +41,14 @@ def set_login_session(user):
 
 @users_blueprint.route("/register", methods=["POST"])
 def register():
-    if session.get("logged_in"):
+    if current_user():
         flash("Logout first")
         return render_template("home.index")
+
     username = request.form.get("username").lower()
     name = request.form.get("name")
     password = request.form.get("password")
     password_confirmation = request.form.get("re_password")
-    existing_user = User.query.filter_by(username=username).first()
-    if existing_user:
-        flash("The username is already taken")
-        return render_template("/forms/register.html")
 
     user = User(username, name, password, password_confirmation, role=Role.USER)
     if user.is_valid():
@@ -66,50 +62,8 @@ def register():
     return render_template("/forms/register.html", error=user.errors)
 
 
-@users_blueprint.route("/aoisaijiajo", methods=["POST"])
-def register2():
-    data = {
-        "username": request.form.get("username").lower(),
-        "name": request.form.get("name"),
-        "password": request.form.get("password"),
-        "re_password": request.form.get("re_password"),
-    }
-    if validate_password(data.get("password")):
-        if data.get("password") == data.get("re_password"):
-            check_user = User.query.filter_by(username=data.get("username")).first()
-            if check_user == None:
-                username = data.get("username")
-                name = data.get("name")
-                password = data.get("password")
-
-                user = User(username, name, password, role=1)
-                errors = user.errors
-
-                if user.is_valid():
-                    db.session.add(user)
-                    db.session.flush()
-                    db.session.commit()
-                    flash("Successfully registered!")
-                    set_login_session(user)
-                    return redirect(url_for("home.index"))
-                else:
-                    print(errors)
-                    return render_template("/forms/register.html", error=errors)
-
-            else:
-                flash("The username is already taken")
-                return render_template("/forms/register.html")
-        else:
-            errors = "Password does not match!"
-            return render_template("/forms/register.html", error=errors)
-    else:
-        errors = validate_password(data.get("password"))
-        print(errors)
-        return render_template("/forms/register.html", error=errors)
-
-
 @users_blueprint.route("/logout")
 def logout():
     session.pop("logged_in", None)
     flash("Logged out successfully")
-    return redirect(url_for("users.login"))
+    return redirect("/")

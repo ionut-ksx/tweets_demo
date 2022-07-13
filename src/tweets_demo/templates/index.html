@@ -24,14 +24,8 @@
         </div>
         <div class="login">
            {# Menu -> Home / Notifications / Tweet / Show user / Log out @username (unique) #}
-            {% if session.get("logged_in") %}
-                Hello {{ session['logged_in'].get('username') }}! (<a href="{{ url_for('users.logout') }}">Logout</a>)
-            {% else %}
-                Hello guest!
-                <br>
-                (<a href="{{ url_for('users.register_form') }}">Register</a>)
-
-            {% endif %} 
+                Hello!! {{username}}!
+                <a href="{{ url_for('users.logout') }}">Logout</a>    
         </div>
     </div>
     <div class="split right">
