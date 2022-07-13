@@ -1,10 +1,9 @@
 from flask import Flask, Blueprint, session, jsonify, render_template, url_for, request, redirect, flash
 from sqlalchemy.orm import validates
 from werkzeug.security import generate_password_hash
-from tweets_demo.models.user import validate_password
 import ipdb
 
-from tweets_demo.models.user import User
+from tweets_demo.models.user import User, Role
 from tweets_demo.app import db
 
 
@@ -46,7 +45,29 @@ def register():
     if session.get("logged_in"):
         flash("Logout first")
         return render_template("home.index")
+    username = request.form.get("username").lower()
+    name = request.form.get("name")
+    password = request.form.get("password")
+    password_confirmation = request.form.get("re_password")
+    existing_user = User.query.filter_by(username=username).first()
+    if existing_user:
+        flash("The username is already taken")
+        return render_template("/forms/register.html")
 
+    user = User(username, name, password, password_confirmation, role=Role.USER)
+    if user.is_valid():
+        db.session.add(user)
+        db.session.flush()
+        db.session.commit()
+        flash("Successfully registered!")
+        set_login_session(user)
+        return redirect(url_for("home.index"))
+    flash("Something went wrong!")
+    return render_template("/forms/register.html", error=user.errors)
+
+
+@users_blueprint.route("/aoisaijiajo", methods=["POST"])
+def register2():
     data = {
         "username": request.form.get("username").lower(),
         "name": request.form.get("name"),

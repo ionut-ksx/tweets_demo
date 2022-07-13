@@ -27,11 +27,11 @@ class User(db.Model, Base):
     tweet = relationship("Tweet", primaryjoin="User.id==Tweet.id_user")
     comment = relationship("Comment", primaryjoin="User.id==Comment.id_user")
 
-    def __init__(self, username, name, password, role=Role.USER):
+    def __init__(self, username, name, password, password_confirmation, role=Role.USER):
         self.username = username
         self.errors = []
         self.name = name
-        self.password(password)
+        self.password(password, password_confirmation)
         self.role = role
 
     @validates(
@@ -67,7 +67,8 @@ class User(db.Model, Base):
         raise AttributeError("Password error")
 
     @password.setter
-    def password(self, password):
+    def password(self, password, password_confirmation):
+        self.validate_password_confirmation(password, password_confirmation)
         self.validate_password(password)
         self.pwhash = generate_password_hash(password)
 
@@ -80,6 +81,10 @@ class User(db.Model, Base):
 
     def is_valid(self):
         return len(self.errors) == 0
+
+    def validate_password_confirmation(self, password, password_confirmation):
+        if password != password_confirmation:
+            self.errors.append("Password does not match password confirmation")
 
     def validate_password(self, password):
         special_sym = ["$", "@", "#", "%"]
