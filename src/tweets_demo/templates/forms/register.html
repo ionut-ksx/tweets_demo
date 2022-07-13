@@ -15,7 +15,13 @@
 
 <div class="center">
   <h2>Registration Form</h2>
-  {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+  {% if error is string %}
+    <p class=error><strong>Error:</strong> {{ error }}
+  {% elif error is sequence %}
+      {% for item in error %}
+        <li> {{ item }} </li>
+      {% endfor %}
+  {% endif %}
   <div class="register">
     <form action="{{ url_for('users.register') }}" method="POST">
       <dl>
