@@ -1,5 +1,5 @@
 html {
-    overflow:hidden;
+    overflow-y: auto;
 }
 body {
   font-family: Arial;
@@ -10,6 +10,7 @@ body {
   height: 100%;
   width: 800px;
   border: none;
+
 }
 
 div.split {
@@ -18,11 +19,11 @@ div.split {
   width: 500px;
   z-index: 1;
   top: 40px;
-  overflow-x: hidden;
 }
 
 div.left {
   left: 0;
+  top: 0;
   width: 160px;
   z-index: 2;
   padding: 20px;
@@ -35,7 +36,7 @@ div.right {
   z-index: 3;
   width: 300px;
   padding-top: 0;
-
+ 
 }
 div.logo{
   width: 50%;

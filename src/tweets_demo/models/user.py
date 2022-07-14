@@ -27,7 +27,7 @@ class User(db.Model, Base):
     tweet = relationship("Tweet", primaryjoin="User.id==Tweet.id_user")
     comment = relationship("Comment", primaryjoin="User.id==Comment.id_user")
 
-    def __init__(self, username, name, passwd, password_confirmation, role=Role.USER):
+    def __init__(self, username="", name="", passwd="", password_confirmation="", role=Role.USER):
         self.username = username
         self.errors = []
         self.name = name

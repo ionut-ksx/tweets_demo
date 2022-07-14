@@ -2,7 +2,7 @@
 <h2>{% block title %}Login Form{% endblock %}</h2>
 
 
-{% block content %}
+{% block login %}
 {% with messages = get_flashed_messages() %}
 <div class=flashes>
     {% if messages %}
@@ -33,6 +33,8 @@
         <br>
       <input type="submit" value="Login">
   </form>
-  <a href="#"><i>Recover password</i></a>
+  <a href="#"><i>Recover password</i></a><br>
+  <span style="text-align: center">OR</span><br>
+  <a href="{{ url_for('users.register') }}">Register</a>
 </div>
 {% endblock %}

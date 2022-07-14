@@ -43,7 +43,6 @@ def logout():
 @home_blueprint.route("/results", methods=["GET", "POST"])
 def search_results():
     search_string = request.args.get("q")
-    ipdb.set_trace()
     service = SearchItem()
     results = service.search(search_string)
 

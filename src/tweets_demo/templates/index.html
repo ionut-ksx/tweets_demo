@@ -17,57 +17,64 @@
                     <a href="{{ url_for('home.index') }}">Home</a>
                 </li>
 
-                <li>Notifications</li>
+                <li><a href="#">My Tweets</a></li>
                 <li><a href="/tweet/new">New Tweeet</a></li>
             </ul>
             
         </div>
         <div class="login">
-           {# Menu -> Home / Notifications / Tweet / Show user / Log out @username (unique) #}
-                Hello!! {{username}}!
-                <a href="{{ url_for('users.logout') }}">Logout</a>    
+            {% if username == 'guest' %}
+                <h4>Hello {{username}}!</h4>
+                <a href="{{ url_for('users.login') }}">Login</a>
+            {% else %}
+                <h4>Hello {{username}}!</h4>
+                <a href="{{ url_for('users.logout') }}">Logout</a>  
+            {% endif%}
         </div>
     </div>
     <div class="split right">
 
 
-        
-{% block content%} 
+    {% if username == 'guest' %}
+    <p>Login to see the web content</p>  
+    {% else %}
+        {% block content%} 
 
-    <div class="navbar-nav child">
-            <form method="GET" enctype="multipart/form-data" action="{{url_for('home.search_results')}}">
-                <label for="search">Search :</label>
-                <input type="search" name="q">
-                <input type="submit" value="submit">
-            </form>  
-        </div>    
+            <div class="navbar-nav child">
+                <form method="GET" enctype="multipart/form-data" action="{{url_for('home.search_results')}}">
+                    <label for="search">Search :</label>
+                    <input type="search" name="q">
+                    <input type="submit" value="submit">
+                </form>  
+            </div>    
 
-    {% with messages = get_flashed_messages() %}
-        <div class=flashes>
-        {% if messages %}
-            <ul>
-            {% for message in messages %}<li>
-                {{ message.upper() }}</li>{% endfor %}
-            </ul>
-            {% endif %}
+            {% with messages = get_flashed_messages() %}
+                <div class=flashes>
+                {% if messages %}
+                    <ul>
+                    {% for message in messages %}<li>
+                        {{ message.upper() }}</li>{% endfor %}
+                    </ul>
+                    {% endif %}
+                    </div>
+
+            {% endwith %}
+
+            <div class="tweets">     
+                {% for tweet in tweets%}
+                <ul>
+                    <li>
+                        {{tweet.name}} ({{tweet.username}}) : <a href="{{ url_for('tweets.show', id= tweet.id) }}">{{tweet.content}}</a>
+                    </li>
+                </ul>
+                {% endfor %}
             </div>
 
-    {% endwith %}
-
-        <div class="tweets"> 
-            
-            {% for tweet in tweets%}
-            <ul>
-                <li>
-                    {{tweet.name}} ({{tweet.username}}) : <a href="{{ url_for('tweets.show', id= tweet.id) }}">{{tweet.content}}</a>
-                </li>
-            </ul>
-            {% endfor %}
-        </div>
-
-            {# =========== Index Section ======== #}
-            
+                {# =========== Index Section ======== #}
+                
         {% endblock %}
+    {% endif %}
+    {% block login %}{%endblock%}
     </div>
 </body>
 </html>

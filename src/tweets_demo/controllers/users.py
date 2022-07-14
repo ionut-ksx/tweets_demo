@@ -13,7 +13,10 @@ users_blueprint = Blueprint("users", __name__)
 
 @users_blueprint.route("/login")
 def login_form():
-    return render_template("/forms/login.html")
+    if current_user():
+        flash("Already logged in")
+        return redirect(url_for("home.index"))
+    return render_template("/forms/login.html", username="guest")
 
 
 @users_blueprint.route("/login", methods=["POST"])
@@ -21,18 +24,21 @@ def login():
     username = request.form.get("username")
     password = request.form.get("password")
     user = User.query.filter_by(username=username).first()
-    if user.check_password(password):
-        flash("You are logged in", "success")
-        set_login_session(user)
-        return redirect(url_for("home.index"))
-    else:
-        flash("Username/password is wrong")
-        return redirect(url_for("users.login"))
+    while user:
+        if user.check_password(password):
+            flash("You are logged in", "success")
+            set_login_session(user)
+            return redirect(url_for("home.index"))
+        else:
+            flash("Username/password is wrong")
+            return redirect(url_for("users.login"))
+    flash("Check your credentials")
+    return redirect(url_for("users.login"))
 
 
 @users_blueprint.route("/register")
 def register_form():
-    return render_template("/forms/register.html")
+    return render_template("/forms/register.html", username="guest")
 
 
 def set_login_session(user):
@@ -59,7 +65,7 @@ def register():
         set_login_session(user)
         return redirect(url_for("home.index"))
     flash("Something went wrong!")
-    return render_template("/forms/register.html", error=user.errors)
+    return render_template("/forms/register.html", error=user.errors, username="guest")
 
 
 @users_blueprint.route("/logout")
