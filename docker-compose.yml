@@ -12,25 +12,16 @@ services:
       POSTGRES_HOST_AUTH_METHOD: trust
       POSTGRES_PASSWORD: '$DB_PASSWORD'
       POSTGRES_USER: twitter_dev
-    # volumes:
-    #   - db-data-flask:/var/lib/postgresql/data
+    volumes: 
+      - ./tmp/db:/var/lib/postgresql/data
+      #- ./tmp/db/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
 
-  twitter:
+  web:
     build: .
-    # image: twitter:0.0.1
     tty: true
     ports:
       - 5001:5001
-    # environment:
-
-      # flashy__SQLALCHEMY_DATABASE_URI: postgresql://twitter_dev:1234400@twitter_db:5432/twitter_dev
     depends_on:
       - db
     volumes:
       - ./:/app/
-
-
-  # volumes:
-  # db-data-flask:
-
-

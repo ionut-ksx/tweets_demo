@@ -1,6 +1,7 @@
 ENV: "local"
 SOME_ENV_VAR: 'testenvvar'
-SQLALCHEMY_DATABASE_URI: sqlite:///tmp/local.db
+# SQLALCHEMY_DATABASE_URI: sqlite:///tmp/local.db
+SQLALCHEMY_DATABASE_URI: postgresql://twitter_dev:1234400@twitter_db:5432/twitter_dev
 SQLALCHEMY_TRACK_MODIFICATIONS: False
 UPLOAD_FOLDER: UPLOAD_FOLDER
 SQLALCHEMY_TRACK_MODIFICATIONS: False

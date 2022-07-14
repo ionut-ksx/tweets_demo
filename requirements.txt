@@ -7,3 +7,5 @@ alembic
 flask_sqlalchemy
 Flask-Alembic
 flask_sessionstore
+psycopg2
+psycopg2-binary
