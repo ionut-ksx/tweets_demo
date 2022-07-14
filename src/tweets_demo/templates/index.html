@@ -40,7 +40,7 @@
     {% else %}
         {% block content%} 
 
-            <div class="navbar-nav child">
+            <div class="navbar-nav child search">
                 <form method="GET" enctype="multipart/form-data" action="{{url_for('home.search_results')}}">
                     <label for="search">Search :</label>
                     <input type="search" name="q">
@@ -62,11 +62,12 @@
 
             <div class="tweets">     
                 {% for tweet in tweets%}
-                <ul>
-                    <li>
-                        {{tweet.name}} ({{tweet.username}}) : <a href="{{ url_for('tweets.show', id= tweet.id) }}">{{tweet.content}}</a>
-                    </li>
-                </ul>
+                <div class="tweet">
+                    <div id="tweet">{{tweet.name}}({{tweet.username}}):</div>
+                    <p>
+                        <a href="{{ url_for('tweets.show', id= tweet.id) }}">{{tweet.content}}</a>
+                    </p>
+                </div>
                 {% endfor %}
             </div>
 

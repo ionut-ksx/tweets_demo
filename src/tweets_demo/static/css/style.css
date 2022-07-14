@@ -46,7 +46,9 @@ div.logo{
 }
 /* Start Search Section - margin: 0 auto;*/
 
-
+div.search{
+  margin-top: 30px;
+}
 div.top{
     width: 220px;
     margin: 2px;
@@ -101,6 +103,7 @@ div.flash {
 }
 div.tweets {
     color: white;
+    padding: 15px;
 }
 
 div.register {
@@ -123,4 +126,16 @@ a:hover {
 /* selected link */
 a:active {
   color: lightseagreen;
+}
+
+div.tweet{
+  border: 1px solid;
+  padding: 10px;
+  box-shadow: 2px 2px;
+  margin-top: 4px;
+}
+
+div#tweet{
+  color: white;
+  background-color: powderblue;
 }
