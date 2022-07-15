@@ -38,7 +38,13 @@ def login():
 
 @users_blueprint.route("/register")
 def register_form():
-    return render_template("/forms/register.html", username="guest")
+
+    if current_user():
+        flash("Logout first")
+        return redirect(url_for("home.index"))
+    else:
+        username = "guest"
+        return render_template("/forms/register.html", username="guest")
 
 
 def set_login_session(user):
@@ -49,7 +55,7 @@ def set_login_session(user):
 def register():
     if current_user():
         flash("Logout first")
-        return render_template("home.index")
+        return redirect(url_for("home.index"))
 
     username = request.form.get("username").lower()
     name = request.form.get("name")
