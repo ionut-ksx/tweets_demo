@@ -21,7 +21,7 @@ from tweets_demo.app import db
 def my_tweets():
     user = current_user()
     tweets = user.tweets
-    return render_template("index.html", tweets=tweets, username=user.username)
+    return render_template("tweet/my_tweets.html", tweets=tweets, username=user.username)
 
 
 @login_required

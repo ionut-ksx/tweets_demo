@@ -1,0 +1,14 @@
+{% extends 'index.html' %}
+{% block title %}View my tweets{% endblock %} 
+{% block content%}
+<div class="tweets">     
+                {% for tweet in tweets%}
+                <div class="tweet">
+                    <div id="tweet">{{tweet.name}}({{tweet.username}}):</div>
+                    <p>
+                        <a href="{{ url_for('tweets.show', id= tweet.id) }}">{{tweet.content}}</a>
+                    </p>
+                </div>
+                {% endfor %}
+            </div>
+{% endblock %}
