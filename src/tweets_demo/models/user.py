@@ -89,19 +89,19 @@ class User(db.Model, Base):
             self.errors.append("Password does not match password confirmation")
 
     def validate_password(self, password):
-        special_sym = ["$", "@", "#", "%"]
+        # special_sym = ["$", "@", "#", "%"]
 
         if len(password) < 6:
             self.errors.append("length should be at least 6")
 
-        if not any(char.isdigit() for char in password):
-            self.errors.append("Password should have at least one numeral")
+        # if not any(char.isdigit() for char in password):
+        #     self.errors.append("Password should have at least one numeral")
 
-        if not any(char.isupper() for char in password):
-            self.errors.append("Password should have at least one uppercase letter")
+        # if not any(char.isupper() for char in password):
+        #     self.errors.append("Password should have at least one uppercase letter")
 
-        if not any(char.islower() for char in password):
-            self.errors.append("Password should have at least one lowercase letter")
+        # if not any(char.islower() for char in password):
+        #     self.errors.append("Password should have at least one lowercase letter")
 
-        if not any(char in special_sym for char in password):
-            self.errors.append("Password should have at least one of the symbols $@#")
+        # if not any(char in special_sym for char in password):
+        #     self.errors.append("Password should have at least one of the symbols $@#")

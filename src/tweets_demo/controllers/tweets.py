@@ -12,7 +12,7 @@ from tweets_demo.models.user import User
 from tweets_demo.models.comment import Comment
 
 
-@tweets_blueprint.route("/tweet/<id>")
+@tweets_blueprint.route("/tweets/<id>")
 @login_required
 def show(id):
 
@@ -38,7 +38,7 @@ def show(id):
     if len(all_comments) == 0:
         mess = "No comments to this tweet"
     return render_template(
-        "tweet/show.html",
+        "tweets/show.html",
         tweet=tweet,
         all_comments=all_comments,
         mess=mess,
@@ -46,13 +46,13 @@ def show(id):
     )
 
 
-@tweets_blueprint.route("/tweet/new")
+@tweets_blueprint.route("/tweets/new")
 @login_required
 def new():
-    return render_template("/tweet/new.html")
+    return render_template("/tweets/new.html")
 
 
-@tweets_blueprint.route("/tweet/new", methods=["POST"])
+@tweets_blueprint.route("/tweets/new", methods=["POST"])
 @login_required
 def create():
 
@@ -67,10 +67,10 @@ def create():
         db.session.commit()
         return redirect("/")
     else:
-        return render_template("/tweet/new.html", errors=errors)
+        return render_template("/tweets/new.html", errors=errors)
 
 
-@tweets_blueprint.route("/tweet/<id>/delete", methods=["GET", "POST"])
+@tweets_blueprint.route("/tweets/<id>/delete", methods=["POST"])
 @login_required
 def destroy(id):
 

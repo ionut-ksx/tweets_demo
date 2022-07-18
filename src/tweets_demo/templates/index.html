@@ -8,36 +8,17 @@
 
 <body> 
     <div class="logo">
-        <h2>___ TEAM WORK ___</h2>
+        <h2>
+            <a href="/">
+            ___ TEAM WORK ___
+            </a>
+        </h2>
     </div>
-    <div class="split left">
-        <div class="menu">
-            <ul>
-                <li>
-                    <a href="{{ url_for('home.index') }}">Home</a>
-                </li>
+    
+    {% extends 'shared/navigation.html' %}
 
-                <li><a href="#">My Tweets</a></li>
-                <li><a href="/tweet/new">New Tweeet</a></li>
-            </ul>
-            
-        </div>
-        <div class="login">
-            {% if username == 'guest' %}
-                <h4>Hello {{username}}!</h4>
-                <a href="{{ url_for('users.login') }}">Login</a>
-            {% else %}
-                <h4>Hello {{username}}!</h4>
-                <a href="{{ url_for('users.logout') }}">Logout</a>  
-            {% endif%}
-        </div>
-    </div>
     <div class="split right">
 
-
-    {% if username == 'guest' %}
-    <p>Login to see the web content</p>  
-    {% else %}
         {% block content%} 
 
             <div class="navbar-nav child search">
@@ -60,21 +41,12 @@
 
             {% endwith %}
 
-            <div class="tweets">     
-                {% for tweet in tweets%}
-                <div class="tweet">
-                    <div id="tweet">{{tweet.name}}({{tweet.username}}):</div>
-                    <p>
-                        <a href="{{ url_for('tweets.show', id= tweet.id) }}">{{tweet.content}}</a>
-                    </p>
-                </div>
-                {% endfor %}
-            </div>
+    {% include 'tweets/list.html' %}
+
 
                 {# =========== Index Section ======== #}
                 
         {% endblock %}
-    {% endif %}
     {% block login %}{%endblock%}
     {% block register %}{%endblock%}
     </div>
