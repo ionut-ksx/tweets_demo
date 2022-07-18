@@ -8,7 +8,7 @@
 {% for comment in all_comments %}
     <a href="{{ url_for('comments.show', id= comment.id) }}">{{comment.name}} ({{comment.username}}) wrote {{comment.content}}</a>
     {% if logedin_user_id == comment.id_user%}
-        <div><a href="{{url_for('comments.delete_C', id = comment.id)}}">Delete comment</a></div>
+        <div><a href="{{url_for('comments.destroy', id = comment.id)}}">Delete comment</a></div>
     {% endif %}
     <hr>
 {% endfor %}
@@ -17,7 +17,7 @@
 {% endif %}
 <div><a href="{{ url_for('comments.new', id= tweet.id) }}">Add a comment</a></div>
 {% if logedin_user_id == tweet.id_user%}
-    <div><a href="{{url_for('tweets.delete', id = tweet.id)}}">Delete tweet</a></div>
+    <div><a href="{{url_for('tweets.destroy', id = tweet.id)}}">Delete tweet</a></div>
 {% endif %}
 {% with messages = get_flashed_messages() %}
     <div class=flashes>
@@ -31,5 +31,5 @@
 
     {% endwith %}
     </div>
-
+{{x}}
 {% endblock %}

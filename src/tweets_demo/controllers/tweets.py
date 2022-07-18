@@ -2,21 +2,23 @@ from flask import Flask, Blueprint, session, jsonify, render_template, url_for, 
 import ipdb
 
 
-from datetime import datetime
-
 tweets_blueprint = Blueprint("tweets", __name__)
 
 from tweets_demo.app import db
 from tweets_demo import login_required
+from tweets_demo.controllers.application import current_user, current_date
+from tweets_demo.models.tweet import Tweet
+from tweets_demo.models.user import User
+from tweets_demo.models.comment import Comment
 
 
 @tweets_blueprint.route("/tweet/<id>")
 @login_required
 def show(id):
-    from tweets_demo.models.tweet import Tweet
-    from tweets_demo.models.user import User
-    from tweets_demo.models.comment import Comment
 
+    user = current_user()
+    # x = user.tweets.(Tweet.id == id)
+    # print(x)
     tweet_query = (
         Tweet.query.join(User, User.id == Tweet.id_user)
         .filter(Tweet.id == id)
@@ -36,7 +38,11 @@ def show(id):
     if len(all_comments) == 0:
         mess = "No comments to this tweet"
     return render_template(
-        "tweet/show.html", tweet=tweet, all_comments=all_comments, mess=mess, logedin_user_id=logedin_user_id
+        "tweet/show.html",
+        tweet=tweet,
+        all_comments=all_comments,
+        mess=mess,
+        logedin_user_id=logedin_user_id,
     )
 
 
@@ -49,39 +55,24 @@ def new():
 @tweets_blueprint.route("/tweet/new", methods=["POST"])
 @login_required
 def create():
-    from tweets_demo.models.tweet import Tweet
 
-    x = datetime.now()
-    current_date_time = (
-        x.strftime("%d")
-        + "-"
-        + x.strftime("%m")
-        + "-"
-        + x.strftime("%Y")
-        + " "
-        + x.strftime("%H")
-        + ":"
-        + x.strftime("%M")
+    tweet = Tweet(
+        id_user=session["logged_in"]["user_id"],
+        created_at=current_date(),
+        content=request.form.get("content"),
     )
-    try:
-        tweet = Tweet(
-            id_user=session["logged_in"]["user_id"],
-            created_at=str(current_date_time),
-            content=request.form.get("content"),
-        )
+    if tweet.is_valid:
         flash("Tweet added")
         db.session.add(tweet)
         db.session.commit()
-    except AssertionError as errors:
+        return redirect("/")
+    else:
         return render_template("/tweet/new.html", errors=errors)
-    return redirect("/")
 
 
 @tweets_blueprint.route("/tweet/<id>/delete", methods=["GET", "POST"])
 @login_required
-def delete(id):
-    from tweets_demo.models.tweet import Tweet
-    from tweets_demo.models.comment import Comment
+def destroy(id):
 
     tweet = Tweet.query.filter(Tweet.id == id).first()
     comments = Comment.query.filter(Comment.id_tweet == id).all()
