@@ -17,6 +17,14 @@ from tweets_demo.app import db
 
 
 @login_required
+@home_blueprint.route("/mytweets")
+def my_tweets():
+    user = current_user()
+    tweets = user.tweets
+    return render_template("index.html", tweets=tweets, username=user.username)
+
+
+@login_required
 @home_blueprint.route("/")
 def index():
     # tweets = Tweet.query.order_by(Tweet.id).all()
