@@ -14,7 +14,7 @@ from tweets_demo.models.user import User
 from tweets_demo.models.comment import Comment
 
 
-@comments_blueprint.route("/comment/<id>")
+@comments_blueprint.route("/comments/<id>")
 @login_required
 def show(id):
 
@@ -26,16 +26,16 @@ def show(id):
     )
     comment = comment_query[0]
     author = session["logged_in"]["user_id"]
-    return render_template("comment/show.html", comment=comment)
+    return render_template("comments/show.html", comment=comment)
 
 
-@comments_blueprint.route("/comment/new/<id>")
+@comments_blueprint.route("/comments/new/<id>")
 @login_required
 def new(id):
-    return render_template("/comment/new.html")
+    return render_template("/comments/new.html")
 
 
-@comments_blueprint.route("/comment/new/<id>", methods=["POST"])
+@comments_blueprint.route("/comments/new/<id>", methods=["POST"])
 @login_required
 def create(id):
 
@@ -51,10 +51,10 @@ def create(id):
         db.session.commit()
         return redirect("/")
     else:
-        return render_template("/comment/new.html", errors=errors)
+        return render_template("/comments/new.html", errors=errors)
 
 
-@comments_blueprint.route("/comment/<id>/delete", methods=["GET", "POST"])
+@comments_blueprint.route("/comments/<id>/delete", methods=["POST"])
 @login_required
 def destroy(id):
 
