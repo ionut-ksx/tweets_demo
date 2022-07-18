@@ -20,32 +20,53 @@ class Comment(db.Model, Base):
     # user = relationship("User", foreign_keys=["id_user"])
 
     def __init__(self, id_tweet, id_user, created_at, content):
-        self.id_tweet = self._is_valid_id_tweet(str(id_tweet))
-        self.id_user = self._is_valid_id_user(str(id_user))
-        self.created_at = self._is_valid_date_time(created_at)
-        self.content = self._is_valid_content(content)
+        self.id_tweet = id_tweet
+        self.id_user = id_user
+        self.created_at = created_at
+        self.content = content
 
     def __repr__(self):
         return f"id:{self.id}, id_tweet: {self.id_tweet}, id_user:{self.id_user},created_at: {self.created_at}, content:{self.content}"
 
-    def _is_valid_id_tweet(self, id_tweet):
-        regex = "^[0-9][0-9]*$"
-        if not re.match(regex, id_tweet):
-            raise ValueError("User id is not correct")
-        return id_tweet
+    # def _is_valid_id_tweet(self, id_tweet):
+    #     regex = "^[0-9][0-9]*$"
+    #     if not re.match(regex, id_tweet):
+    #         raise ValueError("User id is not correct")
+    #     return id_tweet
 
-    def _is_valid_id_user(self, id_user):
-        regex = "^[0-9][0-9]*$"
-        if not re.match(regex, id_user):
-            raise ValueError("User id is not correct")
-        return id_user
+    # def _is_valid_id_user(self, id_user):
+    #     regex = "^[0-9][0-9]*$"
+    #     if not re.match(regex, id_user):
+    #         raise ValueError("User id is not correct")
+    #     return id_user
 
-    def _is_valid_date_time(self, created_at):
-        if not datetime.strptime(created_at, "%d-%m-%Y %H:%M"):
-            raise ValueError("Not a valid datetime")
-        return created_at
+    # def _is_valid_date_time(self, created_at):
+    #     if not datetime.strptime(created_at, "%d-%m-%Y %H:%M"):
+    #         raise ValueError("Not a valid datetime")
+    #     return created_at
 
-    def _is_valid_content(self, content):
-        if not len(content) <= 256:
-            raise ValueError("Content cannot excede 256 characters.")
-        return content
+    # def _is_valid_content(self, content):
+    #     if not len(content) <= 256:
+    #         raise ValueError("Content cannot excede 256 characters.")
+    #     return content
+
+    @validates(
+        "content",
+    )
+    def validates_fields(self, key, value):
+        if not getattr(self, "errors", None):
+            self.errors = []
+
+        if not value:
+            self.errors.append(f"{key} is missing")
+
+        if key == "content":
+            if len(value) < 1:
+                self.errors.append(f"{key} should have at least 1 character")
+            if len(value) < 1:
+                self.errors.append("Content cannot excede 256 characters.")
+
+        return value
+
+    def is_valid(self):
+        return len(self.errors) == 0
