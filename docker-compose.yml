@@ -1,6 +1,18 @@
 version: "3.1"
 
 services:
+  web:
+    build: .
+    image: web
+    stdin_open: true
+    tty: true
+    ports:
+      - 5001:5001
+    depends_on:
+      - migration
+    volumes:
+      - ./:/app/
+
   db:
     container_name: twitter_db
     image: postgres
@@ -16,12 +28,14 @@ services:
       - ./tmp/db:/var/lib/postgresql/data
       #- ./tmp/db/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
 
-  web:
+  migration:
     build: .
-    tty: true
-    ports:
-      - 5001:5001
-    depends_on:
-      - db
+    image: web
+    command: sleep 10 && alembic upgrade head
     volumes:
       - ./:/app/
+    links:
+      - db
+    depends_on:
+      - db
+

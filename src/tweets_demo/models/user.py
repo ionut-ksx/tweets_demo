@@ -24,8 +24,8 @@ class User(db.Model, Base):
     name = Column(String(255), nullable=False)
     pwhash = Column(String(255), nullable=False)
     role = Column(String(255), default=1)
-    tweet = relationship("Tweet", primaryjoin="User.id==Tweet.id_user")
-    comment = relationship("Comment", primaryjoin="User.id==Comment.id_user")
+    tweets = relationship("Tweet", primaryjoin="User.id==Tweet.id_user")
+    comments = relationship("Comment", primaryjoin="User.id==Comment.id_user")
 
     def __init__(self, username="", name="", passwd="", password_confirmation="", role=Role.USER):
         self.username = username
