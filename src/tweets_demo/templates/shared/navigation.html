@@ -1,5 +1,19 @@
 {% block navigation %} 
 
+{% with messages = get_flashed_messages() %}
+    <div class=flashes>
+    {% if messages %}
+        <ul>
+        {% for message in messages %}
+            <li>
+                {{ message.upper() }}
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    </div>
+{% endwith %}
+
 <div class="split left">
         <div class="menu">
             <ul>
@@ -7,7 +21,7 @@
                     <a href="{{ url_for('home.index') }}">Home</a>
                 </li>
 
-                <li><a href="#">My Tweets</a></li>
+                <li><a href="/feed">My Tweets</a></li>
                 <li><a href="/tweets/new">New Tweeet</a></li>
             </ul>
             

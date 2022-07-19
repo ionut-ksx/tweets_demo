@@ -1,0 +1,6 @@
+{% extends "index.html" %}
+{% block content%}
+
+{{render_partial('tweets/list.html', user = user, tweets = tweets)}}
+
+{%endblock%}
