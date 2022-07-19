@@ -12,6 +12,13 @@ from tweets_demo.models.user import User
 from tweets_demo.models.comment import Comment
 
 
+@login_required
+@tweets_blueprint.route("/feed")
+def index():
+    user = current_user()
+    return render_template("tweets/index.html", tweets=user.tweets, user=user)
+
+
 @tweets_blueprint.route("/tweets/<id>")
 @login_required
 def show(id):
