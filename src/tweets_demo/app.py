@@ -4,6 +4,7 @@ import time
 import sys
 from tweets_demo.configuration import config
 import os
+import jinja_partials
 
 
 UPLOAD_FOLDER = "/tmp"
@@ -11,6 +12,8 @@ UPLOAD_FOLDER = "/tmp"
 app = Flask(__name__)
 app.secret_key = "SQLAlchemySecret"
 app.config.update(config().as_dict())
+
+jinja_partials.register_extensions(app)
 
 db = SQLAlchemy(app)
 
