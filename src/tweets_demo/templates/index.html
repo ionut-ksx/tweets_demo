@@ -15,7 +15,7 @@
         </h2>
     </div>
     
-    {{render_partial('shared/navigation.html')}}
+    {{render_partial('shared/navigation.html', current_user=current_user)}}
 
     <div class="split right">
         {% block content %}{%endblock%}
