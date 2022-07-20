@@ -5,7 +5,7 @@ import ipdb
 
 from tweets_demo.models.user import User, Role
 from tweets_demo.app import db
-from tweets_demo.controllers.application import current_user
+from tweets_demo.controllers.application import current_user, login_required
 
 
 users_blueprint = Blueprint("users", __name__)
@@ -75,7 +75,8 @@ def register():
 
 
 @users_blueprint.route("/logout")
-def logout():
+@login_required
+def logout(current_user):
     session.pop("logged_in", None)
     flash("Logged out successfully")
     return redirect("/")

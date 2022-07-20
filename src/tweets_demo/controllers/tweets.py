@@ -5,27 +5,21 @@ import ipdb
 tweets_blueprint = Blueprint("tweets", __name__)
 
 from tweets_demo.app import db
-from tweets_demo import login_required
-from tweets_demo.controllers.application import current_user, current_date
+from tweets_demo.controllers.application import current_date, login_required, my_render_template
 from tweets_demo.models.tweet import Tweet
 from tweets_demo.models.user import User
 from tweets_demo.models.comment import Comment
 
 
-@login_required
 @tweets_blueprint.route("/feed")
-def index():
-    user = current_user()
-    return render_template("tweets/index.html", tweets=user.tweets, user=user)
+@login_required
+def index(current_user):
+    return my_render_template("tweets/index.html", tweets=current_user.tweets, user=current_user)
 
 
 @tweets_blueprint.route("/tweets/<id>")
 @login_required
-def show(id):
-
-    user = current_user()
-    # x = user.tweets.(Tweet.id == id)
-    # print(x)
+def show(current_user, id):
     tweet_query = (
         Tweet.query.join(User, User.id == Tweet.id_user)
         .filter(Tweet.id == id)
@@ -55,14 +49,13 @@ def show(id):
 
 @tweets_blueprint.route("/tweets/new")
 @login_required
-def new():
+def new(current_user):
     return render_template("/tweets/new.html")
 
 
 @tweets_blueprint.route("/tweets/new", methods=["POST"])
 @login_required
-def create():
-
+def create(current_user):
     tweet = Tweet(
         id_user=session["logged_in"]["user_id"],
         created_at=current_date(),
@@ -79,8 +72,7 @@ def create():
 
 @tweets_blueprint.route("/tweets/<id>/delete", methods=["POST"])
 @login_required
-def destroy(id):
-
+def destroy(current_user, id):
     tweet = Tweet.query.filter(Tweet.id == id).first()
     comments = Comment.query.filter(Comment.id_tweet == id).all()
 

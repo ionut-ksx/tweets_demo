@@ -8,15 +8,14 @@ from datetime import datetime
 comments_blueprint = Blueprint("comments", __name__)
 
 from tweets_demo.app import db
-from tweets_demo import login_required
-from tweets_demo.controllers.application import current_user, current_date
+from tweets_demo.controllers.application import current_user, current_date, login_required
 from tweets_demo.models.user import User
 from tweets_demo.models.comment import Comment
 
 
 @comments_blueprint.route("/comments/<id>")
 @login_required
-def show(id):
+def show(current_user, id):
 
     comment_query = (
         Comment.query.join(User, User.id == Comment.id_user)
@@ -31,13 +30,13 @@ def show(id):
 
 @comments_blueprint.route("/comments/new/<id>")
 @login_required
-def new(id):
+def new(current_user, id):
     return render_template("/comments/new.html")
 
 
 @comments_blueprint.route("/comments/new/<id>", methods=["POST"])
 @login_required
-def create(id):
+def create(current_user, id):
 
     comment = Comment(
         id_user=session["logged_in"]["user_id"],
@@ -56,7 +55,7 @@ def create(id):
 
 @comments_blueprint.route("/comments/<id>/delete", methods=["POST"])
 @login_required
-def destroy(id):
+def destroy(current_user, id):
 
     comment = Comment.query.filter(Comment.id == id).first()
 
