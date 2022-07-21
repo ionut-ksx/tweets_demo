@@ -5,13 +5,14 @@ import sys
 from tweets_demo.configuration import config
 import os
 import jinja_partials
-
+from flask_mail import Mail, Message
 
 UPLOAD_FOLDER = "/tmp"
 
 app = Flask(__name__)
 app.secret_key = "SQLAlchemySecret"
 app.config.update(config().as_dict())
+mail = Mail(app)
 
 jinja_partials.register_extensions(app)
 
