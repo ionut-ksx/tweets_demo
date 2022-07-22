@@ -83,4 +83,4 @@ def destroy(current_user, id):
 
     db.session.delete(tweet)
     db.session.commit()
-    return redirect("/")
+    return redirect("/feed")

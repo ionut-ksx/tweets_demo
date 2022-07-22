@@ -131,16 +131,28 @@ class User(db.Model, Base):
         # if not any(char in special_sym for char in password):
         #     self.errors.append("Password should have at least one of the symbols $@#")
 
+    def persist(self):
+        db.session.add(self)
+        db.session.flush()
+        db.session.commit()
+
+    def recovery_hash_is_active(self):
+        return self.recovery_hash and self.recovery_hash_expires_at > datetime.now()
+
     def prepare_for_recovery(self):
         self.prepare_for_trouble()
-        u = self
-        if u.recovery_hash and u.recovery_hash_expires_at > datetime.now():
+
+        if self.recovery_hash_is_active():
             self.errors.append("Can't request a new password right now")
             return
 
-        u.recovery_hash = get_random_string(32)
-        u.recovery_hash_expires_at = tomorrow()
-        db.session.add(u)
-        db.session.flush()
-        db.session.commit()
+        self.recovery_hash = get_random_string(32)
+        self.recovery_hash_expires_at = tomorrow()
+        self.persist()
         return True
+
+    def recover_password(self, passwd, password_confirmation):
+        self.password(passwd, password_confirmation)
+        self.recovery_hash = None
+        self.recovery_hash_expires_at = None
+        self.persist()

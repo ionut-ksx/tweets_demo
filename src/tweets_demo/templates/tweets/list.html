@@ -2,12 +2,10 @@
 <div class="tweets">     
     {% for tweet in tweets%}
     <div class="tweet">
-        <div id="tweet">{{user.name}}({{user.username}}):</div>
-        <p>
-            <a href="{{ url_for('tweets.show', id= tweet.id) }}">{{tweet.content}}</a>
-        </p>
+        <h3><div id="tweet">{{user.name}} tweeted: {{tweet.content}}</div></h3>
+        <h4> Comments:<h4>
         {% for comment in tweet.comments %}
-            <a href="{{ url_for('comments.show', id= comment.id) }}">{{comment.name}} ({{comment.username}}) wrote {{comment.content}}</a>
+            {{comment.user.username}} : <br>{{comment.content}}
                 {% if user.id == comment.id_user%}
             <form action="{{url_for('comments.destroy', id = comment.id)}}" method="POST">
                <input type="submit" value="Delete comment">
@@ -15,6 +13,11 @@
                 {% endif %}
             <hr>
         {% endfor %}
+        <form method="post" action="/comments/new">
+            <input type="hidden" name="tweet_id" value="{{tweet.id}}">
+            <input type="text" name="content" placeholder="add a comment"></input>
+            <button type="submit">Submit</button>
+        </form>
     </div>
     {% endfor %}
 </div>

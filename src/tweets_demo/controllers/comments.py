@@ -34,13 +34,14 @@ def new(current_user, id):
     return render_template("/comments/new.html")
 
 
-@comments_blueprint.route("/comments/new/<id>", methods=["POST"])
+@comments_blueprint.route("/comments/new/", methods=["POST"])
 @login_required
-def create(current_user, id):
+def create(current_user):
+    tweet_id = request.form.get("tweet_id")
 
     comment = Comment(
         id_user=session["logged_in"]["user_id"],
-        id_tweet=id,
+        id_tweet=tweet_id,
         created_at=current_date(),
         content=request.form.get("content"),
     )
@@ -48,7 +49,7 @@ def create(current_user, id):
         flash("Comment added")
         db.session.add(comment)
         db.session.commit()
-        return redirect("/")
+        return redirect("/feed")
     else:
         return render_template("/comments/new.html", errors=errors)
 
@@ -62,4 +63,4 @@ def destroy(current_user, id):
     flash("Comment removed")
     db.session.delete(comment)
     db.session.commit()
-    return redirect("/")
+    return redirect("/feed")

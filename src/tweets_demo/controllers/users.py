@@ -82,17 +82,39 @@ def request_recovery():
 
 
 @users_blueprint.route("/recovery/request", methods=["POST"])
-def create_recovery_token():
+def create_recovery_hash():
     email = request.form.get("email").lower()
     existing_user = User.query.filter_by(email=email).first()
     if not existing_user:
         raise ("touch luck")
     succes = existing_user.prepare_for_recovery()
     if succes:
+        send_recovery_email(existing_user)
         flash("Successfully requested password!")
     else:
         flash(",".join(existing_user.errors))
     return my_render_template("/forms/request_recovery.html")
+
+
+@users_blueprint.route("/recovery/")
+def recovery_set_password():
+    recovery_hash = request.args.get("recovery_hash")
+    return my_render_template("/forms/set_recovery.html", recovery_hash=recovery_hash)
+
+
+@users_blueprint.route("/recovery/", methods=["POST"])
+def set_recovery():
+    recovery_hash = request.form.get("recovery_hash")
+    password = request.form.get("password")
+    password_confirmation = request.form.get("password_confirmation")
+    existing_user = User.query.filter_by(recovery_hash=recovery_hash).first()
+    if not existing_user:
+        flash("Invalid recovery token")
+        return redirect("/")
+    if existing_user.recovery_hash_is_active():
+        existing_user.recover_password(password, password_confirmation)
+        flash("Password reset successfully")
+        return redirect("/login")
 
 
 @users_blueprint.route("/logout")
@@ -101,3 +123,10 @@ def logout(current_user):
     session.pop("logged_in", None)
     flash("Logged out successfully")
     return redirect("/")
+
+
+def send_recovery_email(user):
+    recovery_hash = user.recovery_hash
+    msg = Message("Password recovery", sender="no-reply@tweets.demo", recipients=[user.email])
+    msg.body = f"<a href='http://127.0.0.1:5001/recovery?recovery_hash={recovery_hash}'>Recover your password</a> "
+    mail.send(msg)

@@ -1,5 +1,5 @@
 {% extends "index.html" %}
-<h2>{% block title %}Login Form{% endblock %}</h2>
+<h2>{% block title %}Set new password{% endblock %}</h2>
 
 
 {% block content %}
@@ -16,8 +16,9 @@
 {% endwith %}
 <div class="center">
   {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
-    <h2>Welcome!</h2>
-  <form action="{{ url_for('users.set_recovery_password') }}" method="POST">
+    <h2>Set your new password!</h2>
+  <form action="{{ url_for('users.set_recovery') }}" method="POST">
+    <input type="hidden" name="recovery_hash" value={{recovery_hash}}>
     <label for="password">New Password</label>
       <br>
       <input type="password" name="password" placeholder="Your newpassword"></input>

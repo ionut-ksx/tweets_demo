@@ -16,8 +16,8 @@ class Comment(db.Model, Base):
     created_at = Column(String(255), nullable=False)
     content = Column(String(256), nullable=False)
 
-    # tweet = relationship("Tweet", foreign_keys=["id_tweet"])
-    # user = relationship("User", foreign_keys=["id_user"])
+    # tweet = relationship("Tweet", primaryjoin="Tweet.id==Comment.id_tweet")
+    user = relationship("User", primaryjoin="User.id==Comment.id_user")
 
     def __init__(self, id_tweet, id_user, created_at, content):
         self.id_tweet = id_tweet
