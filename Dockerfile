@@ -17,4 +17,4 @@ ENV FLASK_ENV=development
 
 RUN apt install -y ruby-full
 RUN gem install --no-document  mailcatcher
-CMD mailcatcher --ip 0.0.0.0 && cd /app/src/tweets_demo && flask run --host=0.0.0.0 --port=5001
+CMD mailcatcher --ip 0.0.0.0 && cd /app/src/tweets_demo && gunicorn app:app --bind=0.0.0.0:5001 --workers=2
