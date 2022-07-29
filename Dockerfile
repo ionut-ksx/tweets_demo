@@ -14,4 +14,7 @@ RUN pip install -e .
 
 ENV FLASK_APP=app
 ENV FLASK_ENV=development
-CMD cd /app/src/tweets_demo && flask run --host=0.0.0.0 --port=5001
+
+RUN apt install -y ruby-full
+RUN gem install --no-document  mailcatcher
+CMD mailcatcher --ip 0.0.0.0 && cd /app/src/tweets_demo && flask run --host=0.0.0.0 --port=5001

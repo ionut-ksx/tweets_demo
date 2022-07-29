@@ -5,8 +5,9 @@ import ipdb
 
 from tweets_demo.models.user import User, Role
 from tweets_demo.app import db
-from tweets_demo.controllers.application import current_user, login_required
-
+from tweets_demo.controllers.application import current_user, login_required, my_render_template
+from tweets_demo.app import mail
+from flask_mail import Message
 
 users_blueprint = Blueprint("users", __name__)
 
@@ -16,7 +17,7 @@ def login_form():
     if current_user():
         flash("Already logged in")
         return redirect(url_for("home.index"))
-    return render_template("/forms/login.html", username="guest")
+    return my_render_template("/forms/login.html", username="guest")
 
 
 @users_blueprint.route("/login", methods=["POST"])
@@ -44,7 +45,7 @@ def register_form():
         return redirect(url_for("home.index"))
     else:
         username = "guest"
-        return render_template("/forms/register.html", username="guest")
+        return my_render_template("/forms/register.html", username="guest")
 
 
 def set_login_session(user):
@@ -57,12 +58,13 @@ def register():
         flash("Logout first")
         return redirect(url_for("home.index"))
 
+    email = request.form.get("email").lower()
     username = request.form.get("username").lower()
     name = request.form.get("name")
     password = request.form.get("password")
     password_confirmation = request.form.get("re_password")
 
-    user = User(username, name, password, password_confirmation, role=Role.USER)
+    user = User(email, username, name, password, password_confirmation, role=Role.USER)
     if user.is_valid():
         db.session.add(user)
         db.session.flush()
@@ -71,7 +73,48 @@ def register():
         set_login_session(user)
         return redirect(url_for("home.index"))
     flash("Something went wrong!")
-    return render_template("/forms/register.html", error=user.errors, username="guest")
+    return my_render_template("/forms/register.html", error=user.errors, username="guest")
+
+
+@users_blueprint.route("/recovery/request")
+def request_recovery():
+    return my_render_template("/forms/request_recovery.html")
+
+
+@users_blueprint.route("/recovery/request", methods=["POST"])
+def create_recovery_hash():
+    email = request.form.get("email").lower()
+    existing_user = User.query.filter_by(email=email).first()
+    if not existing_user:
+        raise ("touch luck")
+    succes = existing_user.prepare_for_recovery()
+    if succes:
+        send_recovery_email(existing_user)
+        flash("Successfully requested password!")
+    else:
+        flash(",".join(existing_user.errors))
+    return my_render_template("/forms/request_recovery.html")
+
+
+@users_blueprint.route("/recovery/")
+def recovery_set_password():
+    recovery_hash = request.args.get("recovery_hash")
+    return my_render_template("/forms/set_recovery.html", recovery_hash=recovery_hash)
+
+
+@users_blueprint.route("/recovery/", methods=["POST"])
+def set_recovery():
+    recovery_hash = request.form.get("recovery_hash")
+    password = request.form.get("password")
+    password_confirmation = request.form.get("password_confirmation")
+    existing_user = User.query.filter_by(recovery_hash=recovery_hash).first()
+    if not existing_user:
+        flash("Invalid recovery token")
+        return redirect("/")
+    if existing_user.recovery_hash_is_active():
+        existing_user.recover_password(password, password_confirmation)
+        flash("Password reset successfully")
+        return redirect("/login")
 
 
 @users_blueprint.route("/logout")
@@ -80,3 +123,10 @@ def logout(current_user):
     session.pop("logged_in", None)
     flash("Logged out successfully")
     return redirect("/")
+
+
+def send_recovery_email(user):
+    recovery_hash = user.recovery_hash
+    msg = Message("Password recovery", sender="no-reply@tweets.demo", recipients=[user.email])
+    msg.body = f"<a href='http://127.0.0.1:5001/recovery?recovery_hash={recovery_hash}'>Recover your password</a> "
+    mail.send(msg)

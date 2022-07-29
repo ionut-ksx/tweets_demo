@@ -38,7 +38,7 @@ def show(current_user, id):
     mess = ""
     if len(all_comments) == 0:
         mess = "No comments to this tweet"
-    return render_template(
+    return my_render_template(
         "tweets/show.html",
         tweet=tweet,
         all_comments=all_comments,
@@ -50,7 +50,7 @@ def show(current_user, id):
 @tweets_blueprint.route("/tweets/new")
 @login_required
 def new(current_user):
-    return render_template("/tweets/new.html")
+    return my_render_template("/tweets/new.html")
 
 
 @tweets_blueprint.route("/tweets/new", methods=["POST"])
@@ -67,7 +67,7 @@ def create(current_user):
         db.session.commit()
         return redirect("/")
     else:
-        return render_template("/tweets/new.html", errors=errors)
+        return my_render_template("/tweets/new.html", errors=errors)
 
 
 @tweets_blueprint.route("/tweets/<id>/delete", methods=["POST"])
@@ -83,4 +83,4 @@ def destroy(current_user, id):
 
     db.session.delete(tweet)
     db.session.commit()
-    return redirect("/")
+    return redirect("/feed")

@@ -1,15 +1,28 @@
 """
     create users table
 """
-from sqlalchemy import Column, Integer, String, ForeignKey, Index
+from sqlalchemy import Column, Integer, String, ForeignKey, Index, DateTime
 from sqlalchemy.orm import relationship, validates
 from tweets_demo.app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
 from sqlalchemy.ext.declarative import declarative_base
 import ipdb
+import secrets
+import string
+from datetime import datetime, timedelta
 
 Base = declarative_base()
+
+char_string = string.ascii_letters + string.digits
+
+
+def get_random_string(size):
+    return "".join(secrets.choice(char_string) for _ in range(size))
+
+
+def tomorrow():
+    return datetime.now() + timedelta(hours=24)
 
 
 class Role:
@@ -26,26 +39,38 @@ class User(db.Model, Base):
     role = Column(String(255), default=1)
     tweets = relationship("Tweet", primaryjoin="User.id==Tweet.id_user")
     comments = relationship("Comment", primaryjoin="User.id==Comment.id_user")
+    email = Column(String(255), nullable=False)
+    recovery_hash = Column(String(255), nullable=True)
+    recovery_hash_expires_at = Column(DateTime(), nullable=True)
 
-    def __init__(self, username="", name="", passwd="", password_confirmation="", role=Role.USER):
+    def __init__(self, email, username="", name="", passwd="", password_confirmation="", role=Role.USER):
+        self.email = email
         self.username = username
         self.errors = []
         self.name = name
         self.password(passwd, password_confirmation)
         self.role = role
 
+    def prepare_for_trouble(self):
+        if not getattr(self, "errors", None):
+            self.errors = []
+
     @validates(
+        "email",
         "username",
         "name",
         "pwhash",
         "role",
     )
     def validates_fields(self, key, value):
-        if not getattr(self, "errors", None):
-            self.errors = []
+        self.prepare_for_trouble()
 
         if not value:
             self.errors.append(f"{key} is missing")
+
+        if key == "email":
+            if "@" not in value:
+                self.errors.append("email must contain @ character")
 
         if key == "username":
             if not len(value) >= 5:
@@ -105,3 +130,29 @@ class User(db.Model, Base):
 
         # if not any(char in special_sym for char in password):
         #     self.errors.append("Password should have at least one of the symbols $@#")
+
+    def persist(self):
+        db.session.add(self)
+        db.session.flush()
+        db.session.commit()
+
+    def recovery_hash_is_active(self):
+        return self.recovery_hash and self.recovery_hash_expires_at > datetime.now()
+
+    def prepare_for_recovery(self):
+        self.prepare_for_trouble()
+
+        if self.recovery_hash_is_active():
+            self.errors.append("Can't request a new password right now")
+            return
+
+        self.recovery_hash = get_random_string(32)
+        self.recovery_hash_expires_at = tomorrow()
+        self.persist()
+        return True
+
+    def recover_password(self, passwd, password_confirmation):
+        self.password(passwd, password_confirmation)
+        self.recovery_hash = None
+        self.recovery_hash_expires_at = None
+        self.persist()

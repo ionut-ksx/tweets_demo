@@ -15,6 +15,8 @@
 {% endwith %}
 
 <div class="split left">
+    {% if current_user %}
+        <h4>Hello {{current_user.username}}!</h4>
         <div class="menu">
             <ul>
                 <li>
@@ -24,18 +26,14 @@
                 <li><a href="/feed">My Tweets</a></li>
                 <li><a href="/tweets/new">New Tweeet</a></li>
             </ul>
-            
         </div>
-        <div class="login">
-            {% if current_user %}
-                <h4>Hello {{current_user.username}}!</h4>
-                <a href="{{ url_for('users.logout') }}">Logout</a>  
-            {% else %}
-                 <h4>Hello Guest!</h4>
-                <a href="{{ url_for('users.login') }}">Login</a>
-            {% endif %}
-        </div>
+        <a href="{{ url_for('users.logout') }}">Logout</a>  
+    {% else %}
+         <h4>Hello Guest!</h4>
+        <a href="{{ url_for('users.login') }}">Login</a>
         <a href="{{ url_for('users.register_form') }}">Register</a>
+        <a href="/recovery/request"><i>Recover password</i></a><br>
+    {% endif %}
 </div>
 
 {% endblock %}

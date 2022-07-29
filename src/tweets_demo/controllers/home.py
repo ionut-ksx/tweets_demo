@@ -6,7 +6,6 @@ from tweets_demo.models.user import User
 from tweets_demo.services.search import SearchItem
 from tweets_demo.controllers.application import current_user, login_required, my_render_template
 
-
 import os
 import ipdb
 
@@ -20,7 +19,7 @@ from tweets_demo.app import db
 def my_tweets(current_user):
     user = current_user()
     tweets = user.tweets
-    return render_template("tweet/my_tweets.html", tweets=tweets, username=user.username)
+    return my_render_template("tweet/my_tweets.html", tweets=tweets, username=user.username)
 
 
 @home_blueprint.route("/")
@@ -42,7 +41,7 @@ def search_results(current_user):
     service = SearchItem()
     results = service.search(search_string)
 
-    return render_template(
+    return my_render_template(
         "services/search_results.html",
         results=results,
     )

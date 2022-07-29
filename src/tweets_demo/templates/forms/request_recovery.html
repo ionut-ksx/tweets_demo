@@ -1,0 +1,28 @@
+{% extends "index.html" %}
+<h2>{% block title %}Forgot pass{% endblock %}</h2>
+
+
+{% block content %}
+{% with messages = get_flashed_messages() %}
+<div class=flashes>
+    {% if messages %}
+      <ul >
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+  {% endif %}
+</div>
+{% endwith %}
+<div class="center">
+  {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+    <h2>Forgot your password?</h2>
+  <form action="{{ url_for('users.request_recovery') }}" method="POST">
+    <label for="email">Email</label>
+      <br>
+      <input type="text" name="email" placeholder="Your email">
+      </input>
+      <input type="submit" value="Request">
+  </form>
+</div>
+{% endblock %}

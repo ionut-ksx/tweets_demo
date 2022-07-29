@@ -1,0 +1,35 @@
+{% extends "index.html" %}
+<h2>{% block title %}Set new password{% endblock %}</h2>
+
+
+{% block content %}
+{% with messages = get_flashed_messages() %}
+<div class=flashes>
+    {% if messages %}
+      <ul >
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+  {% endif %}
+</div>
+{% endwith %}
+<div class="center">
+  {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+    <h2>Set your new password!</h2>
+  <form action="{{ url_for('users.set_recovery') }}" method="POST">
+    <input type="hidden" name="recovery_hash" value={{recovery_hash}}>
+    <label for="password">New Password</label>
+      <br>
+      <input type="password" name="password" placeholder="Your newpassword"></input>
+
+    <label for="password">New Password Confirmation</label>
+      <br>
+      <input type="password" name="password_confirmation" placeholder="Retype your password"></input>
+
+      <input type="submit" value="Recover">
+  </form>
+  <span style="text-align: center">OR</span><br>
+  <a href="{{ url_for('users.register_form') }}">Register</a>
+</div>
+{% endblock %}
