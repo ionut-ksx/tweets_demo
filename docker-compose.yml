@@ -6,6 +6,7 @@ services:
     image: web
     stdin_open: true
     tty: true
+    restart: always
     ports:
       - 5001:5001
       - 1080:1080
